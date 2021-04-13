@@ -19,11 +19,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = DeathService.class)
+@ContextConfiguration(classes = DeathServiceImpl.class)
 public class DeathServiceTest {
 
     @Autowired
-    private DeathService deathService;
+    private DeathServiceImpl deathService;
 
     @MockBean
     private DeathApiClient deathApiClient;

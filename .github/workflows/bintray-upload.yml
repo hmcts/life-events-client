@@ -23,13 +23,14 @@ jobs:
         run: ./gradlew check
       - name: Integration test
         env:
-          ACCESS_TOKEN_URI: ${{ secrets.ACCESS_TOKEN_URI }}
-          CLIENT_ID: ${{ secrets.CLIENT_ID }}
-          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-          USERNAME: ${{ secrets.USERNAME }}
-          PASSWORD: ${{ secrets.PASSWORD }}
-          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-          PUBLIC_CERTIFICATE: ${{ secrets.PUBLIC_CERTIFICATE }}
+          LEV_ACCESS_TOKEN_URI: ${{ secrets.ACCESS_TOKEN_URI }}
+          LEV_CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          LEV_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          LEV_USERNAME: ${{ secrets.USERNAME }}
+          LEV_PASSWORD: ${{ secrets.PASSWORD }}
+          LEV_PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          LEV_PUBLIC_CERTIFICATE: ${{ secrets.PUBLIC_CERTIFICATE }}
+          LEV_DEATH_URL: ${{ secrets.DEATH_URL }}
         run: ./gradlew integration
       - name: Release
         env:
