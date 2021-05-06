@@ -1,13 +1,14 @@
-ssl:
-  publicCertificate: ${PUBLIC_CERTIFICATE}
-  privateKey: ${PRIVATE_KEY}
-bearertoken:
-  accessTokenUri: ${ACCESS_TOKEN_URI}
-  clientId: ${CLIENT_ID}
-  clientSecret: ${CLIENT_SECRET}
-  username: ${USERNAME}
-  password: ${PASSWORD}
-death:
-  url: ${DEATH_URL:https://api.uat.notprod.lev.homeoffice.gov.uk}
+lev:
+  ssl:
+    publicCertificate: ${LEV_PUBLIC_CERTIFICATE:}
+    privateKey: ${LEV_PRIVATE_KEY:}
+  bearertoken:
+    accessTokenUri: ${LEV_ACCESS_TOKEN_URI:}
+    clientId: ${LEV_CLIENT_ID:}
+    clientSecret: ${LEV_CLIENT_SECRET:}
+    username: ${LEV_USERNAME:}
+    password: ${LEV_PASSWORD:}
+  death:
+    url: ${LEV_DEATH_URL:}
 
 

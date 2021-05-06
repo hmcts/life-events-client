@@ -26,35 +26,33 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.security.oauth2.client.feign.OAuth2FeignRequestInterceptor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.client.DefaultOAuth2ClientContext;
 import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
 
-@Configuration
 @EnableConfigurationProperties
 public class ClientConfiguration {
 
-  @Autowired
-  ResourceOwnerPasswordResourceDetails resourceOwnerPasswordResourceDetails;
+  private static final Logger logger = LoggerFactory.getLogger(ClientConfiguration.class);
 
   @Bean
-  public OAuth2FeignRequestInterceptor bearerTokenRequestInterceptor() {
-    return new OAuth2FeignRequestInterceptor(new DefaultOAuth2ClientContext(), resourceOwnerPasswordResourceDetails);
-  }
-
-  @Bean
+  @ConditionalOnProperty(name = "lev.bearertoken.clientId")
   public ResourceOwnerPasswordResourceDetails bearerTokenResourceDetails(
-          @Value("${bearertoken.accessTokenUri}") String accessTokenUri,
-          @Value("${bearertoken.clientId}") String clientId,
-          @Value("${bearertoken.clientSecret}") String clientSecret,
-          @Value("${bearertoken.username}") String userName,
-          @Value("${bearertoken.password}") String password
-          ) {
+          @Value("${lev.bearertoken.accessTokenUri:https://sso.digital.homeoffice.gov.uk/auth/realms/lev/protocol/openid-connect/token}") String accessTokenUri,
+          @Value("${lev.bearertoken.clientId}") String clientId,
+          @Value("${lev.bearertoken.clientSecret}") String clientSecret,
+          @Value("${lev.bearertoken.username}") String userName,
+          @Value("${lev.bearertoken.password}") String password
+
+  ) {
+    logger.info("bearerTokenResourceDetails()");
     ResourceOwnerPasswordResourceDetails details = new ResourceOwnerPasswordResourceDetails();
     details.setAccessTokenUri(accessTokenUri);
     details.setClientId(clientId);
@@ -65,14 +63,27 @@ public class ClientConfiguration {
   }
 
   @Bean
+  @ConditionalOnBean(value=ResourceOwnerPasswordResourceDetails.class)
+  public OAuth2FeignRequestInterceptor bearerTokenRequestInterceptor(ResourceOwnerPasswordResourceDetails bearerTokenResourceDetails) {
+    logger.info("bearerTokenRequestInterceptor()");
+    return new OAuth2FeignRequestInterceptor(new DefaultOAuth2ClientContext(), bearerTokenResourceDetails);
+  }
+
+  @Bean
+  @ConditionalOnProperty(name = "lev.ssl.publicCertificate")
   public Client levClient(
-          @Value("${ssl.publicCertificate}") String publicCertificate,
-          @Value("${ssl.privateKey}") String privateKey
+          @Value("${lev.ssl.publicCertificate}") String publicCertificate,
+          @Value("${lev.ssl.privateKey}") String privateKey
   )
           throws NoSuchAlgorithmException, KeyStoreException,
           CertificateException, IOException, KeyManagementException, UnrecoverableKeyException {
-
-    return new Client.Default(getClientSSLSocketFactory(publicCertificate, privateKey), null);
+    if(publicCertificate == null || publicCertificate.isEmpty()){
+      logger.info("levClientNoOp()");
+      return new Client.Default(null, null);
+    } else {
+      logger.info("levClient()");
+      return new Client.Default(getClientSSLSocketFactory(publicCertificate, privateKey), null);
+    }
   }
 
   private SSLSocketFactory getClientSSLSocketFactory(String publicCertificate, String privateKey)

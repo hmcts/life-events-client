@@ -20,7 +20,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = { ClientConfiguration.class }, properties = {
-        "death.url=https://api.uat.notprod.lev.homeoffice.gov.uk"
+        "lev.death.url=https://api.uat.notprod.lev.homeoffice.gov.uk"
 })
 @ActiveProfiles("test")
 @EnableConfigurationProperties
