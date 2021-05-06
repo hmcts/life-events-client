@@ -1,4 +1,4 @@
-name: Upload to Bintray
+name: Integration test
 
 on:
   pull_request:
@@ -32,10 +32,3 @@ jobs:
           LEV_PUBLIC_CERTIFICATE: ${{ secrets.PUBLIC_CERTIFICATE }}
           LEV_DEATH_URL: ${{ secrets.DEATH_URL }}
         run: ./gradlew integration
-      - name: Release
-        env:
-          BINTRAY_USER: jenkins-reform-hmcts
-          BINTRAY_KEY: ${{ secrets.BINTRAY_KEY }}
-          RELEASE_VERSION: ${{ github.ref }}
-        run: ./gradlew bintrayUpload
-        if: startsWith(github.ref, 'refs/tags')
