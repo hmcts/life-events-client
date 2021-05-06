@@ -32,7 +32,11 @@ To build the project execute the following command:
 
 ### Publishing the library
 
-Library is published to [bintray](https://bintray.com/hmcts/hmcts-maven) using [github actions](.github/workflows/bintray-upload.yml)
+To check which versions is available on jitpack:
+https://jitpack.io/com/github/hmcts/life-events-client/
+
+To check on the build log on the version:
+https://jitpack.io/com/github/hmcts/life-events-client/{version}/build.log
 
 ## License
 
