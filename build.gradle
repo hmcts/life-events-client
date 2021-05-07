@@ -12,7 +12,7 @@ plugins {
 
 def buildNumber = System.getenv("RELEASE_VERSION")?.replace("refs/tags/", "") ?: "DEV-SNAPSHOT"
 
-group = 'uk.gov.hmcts.reform'
+group = 'com.github.hmcts'
 version buildNumber
 description = 'Client for HMPO Life Events service'
 sourceCompatibility = 11
@@ -45,8 +45,6 @@ dependencyCheck {
     failBuildOnCVSS = System.getProperty('dependencyCheck.failBuild') == 'true' ? 0 : 11
     suppressionFile = 'config/owasp/suppressions.xml'
 }
-
-sourceCompatibility = 11
 
 sourceSets {
     integrationTest {
@@ -154,8 +152,9 @@ ext {
 dependencies {
     implementation group: 'io.swagger', name: 'swagger-annotations', version: '1.5.18'
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
-    implementation 'org.springframework.cloud:spring-cloud-starter-oauth2'
-    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-oauth2', version: '2.2.5.RELEASE'
+    implementation group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: '2.5.1.RELEASE'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign'
     implementation group: 'com.heroku.sdk', name: 'env-keystore', version: '1.1.6'
 
     implementation group: 'io.github.openfeign', name: 'feign-jackson', version: '11.0'
