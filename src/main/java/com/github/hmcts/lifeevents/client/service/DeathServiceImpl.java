@@ -1,11 +1,10 @@
 package com.github.hmcts.lifeevents.client.service;
 
-import com.github.hmcts.lifeevents.client.api.DeathApiClient;
-import com.github.hmcts.lifeevents.client.model.V1Death;
-
 import java.time.LocalDate;
 import java.util.List;
 
+import com.github.hmcts.lifeevents.client.api.DeathApiClient;
+import com.github.hmcts.lifeevents.client.model.V1Death;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -22,12 +21,22 @@ public class DeathServiceImpl implements DeathService {
     }
 
     @Override
-    public List<V1Death> searchForDeathRecordsByNamesAndDate(String forenames, String surname, LocalDate date){
-        return deathApiClient.searchV1Death(forenames, surname, date).getBody();
+    public List<V1Death> searchForDeathRecordsByNamesAndDate(String forenames, String surname, LocalDate date) {
+        try {
+            return deathApiClient.searchV1Death(forenames, surname, date).getBody();
+        } catch (Exception e) {
+            logger.error("Error during LEV call", e);
+            throw e;
+        }
     }
 
     @Override
-    public V1Death getDeathRecordById(Integer id){
-        return deathApiClient.readV1Death(id).getBody();
+    public V1Death getDeathRecordById(Integer id) {
+        try {
+            return deathApiClient.readV1Death(id).getBody();
+        } catch (Exception e) {
+            logger.error("Error during LEV call", e);
+            throw e;
+        }
     }
 }
