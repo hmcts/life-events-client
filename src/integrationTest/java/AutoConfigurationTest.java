@@ -1,7 +1,7 @@
-import uk.gov.hmcts.lifeevents.client.api.DeathApiClient;
-import uk.gov.hmcts.lifeevents.client.config.ClientConfiguration;
-import uk.gov.hmcts.lifeevents.client.config.ServiceConfiguration;
-import uk.gov.hmcts.lifeevents.client.service.DeathService;
+import com.github.hmcts.lifeevents.client.api.DeathApiClient;
+import com.github.hmcts.lifeevents.client.config.ClientConfiguration;
+import com.github.hmcts.lifeevents.client.config.ServiceConfiguration;
+import com.github.hmcts.lifeevents.client.service.DeathService;
 
 import feign.Client;
 import org.junit.jupiter.api.DisplayName;
