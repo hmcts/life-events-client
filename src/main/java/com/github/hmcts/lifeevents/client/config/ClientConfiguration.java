@@ -53,6 +53,7 @@ public class ClientConfiguration {
 
   ) {
     logger.info("bearerTokenResourceDetails()");
+    logger.info("lev.bearertoken.accessTokenUri: " + accessTokenUri);
     ResourceOwnerPasswordResourceDetails details = new ResourceOwnerPasswordResourceDetails();
     details.setAccessTokenUri(accessTokenUri);
     details.setClientId(clientId);
