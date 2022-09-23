@@ -15,6 +15,9 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
@@ -22,6 +25,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 
 import feign.Client;
+import feign.RequestInterceptor;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
@@ -32,44 +36,67 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cloud.security.oauth2.client.feign.OAuth2FeignRequestInterceptor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.oauth2.client.DefaultOAuth2ClientContext;
-import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
+import org.springframework.security.oauth2.client.AuthorizedClientServiceOAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.client.OAuth2AuthorizationContext;
+import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProvider;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProviderBuilder;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 
 @EnableConfigurationProperties
 public class ClientConfiguration {
 
   private static final Logger logger = LoggerFactory.getLogger(ClientConfiguration.class);
+  
+  private final OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
+  private final ClientRegistrationRepository clientRegistrationRepository;
 
+  public ClientConfiguration(OAuth2AuthorizedClientService oAuth2AuthorizedClientService,
+                          ClientRegistrationRepository clientRegistrationRepository) {
+    this.oAuth2AuthorizedClientService = oAuth2AuthorizedClientService;
+    this.clientRegistrationRepository = clientRegistrationRepository;
+  }
+  
   @Bean
-  @ConditionalOnProperty(name = "lev.bearertoken.clientId")
-  public ResourceOwnerPasswordResourceDetails bearerTokenResourceDetails(
-          @Value("${lev.bearertoken.accessTokenUri:https://sso.digital.homeoffice.gov.uk/auth/realms/lev/protocol/openid-connect/token}") String accessTokenUri,
-          @Value("${lev.bearertoken.clientId}") String clientId,
-          @Value("${lev.bearertoken.clientSecret}") String clientSecret,
-          @Value("${lev.bearertoken.username}") String userName,
-          @Value("${lev.bearertoken.password}") String password
+  public OAuth2AuthorizedClientManager authorizedClientManager( @Value("${lev.bearertoken.username}") String username, @Value("${lev.bearertoken.password}") String password) {
+    logger.info("authorizedClientManager() username: " + username);
+    OAuth2AuthorizedClientProvider authorizedClientProvider = OAuth2AuthorizedClientProviderBuilder.builder()
+        .password()
+        .refreshToken()
+        .build();
 
-  ) {
-    logger.info("bearerTokenResourceDetails()");
-    logger.info("lev.bearertoken.accessTokenUri: " + accessTokenUri);
-    ResourceOwnerPasswordResourceDetails details = new ResourceOwnerPasswordResourceDetails();
-    details.setAccessTokenUri(accessTokenUri);
-    details.setClientId(clientId);
-    details.setClientSecret(clientSecret);
-    details.setUsername(userName);
-    details.setPassword(password);
-    return details;
+    AuthorizedClientServiceOAuth2AuthorizedClientManager authorizedClientManager =
+        new AuthorizedClientServiceOAuth2AuthorizedClientManager(clientRegistrationRepository, oAuth2AuthorizedClientService);
+    authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider);
+    authorizedClientManager.setContextAttributesMapper(contextAttributesMapper(username, password));
+    return authorizedClientManager;
   }
 
-  @Bean
-  @ConditionalOnBean(value=ResourceOwnerPasswordResourceDetails.class)
-  public OAuth2FeignRequestInterceptor bearerTokenRequestInterceptor(ResourceOwnerPasswordResourceDetails bearerTokenResourceDetails) {
-    logger.info("bearerTokenRequestInterceptor()");
-    return new OAuth2FeignRequestInterceptor(new DefaultOAuth2ClientContext(), bearerTokenResourceDetails);
+  private Function<OAuth2AuthorizeRequest, Map<String, Object>> contextAttributesMapper(final String username, final String password) {
+    return authorizeRequest -> {
+      final Map<String, Object> contextAttributes = new HashMap<>();
+      contextAttributes.put(OAuth2AuthorizationContext.USERNAME_ATTRIBUTE_NAME, username);
+      contextAttributes.put(OAuth2AuthorizationContext.PASSWORD_ATTRIBUTE_NAME, password);
+      return contextAttributes;
+    };
   }
-
+  
+  @Bean
+  @ConditionalOnBean(value=OAuth2AuthorizedClientManager.class)
+  public RequestInterceptor requestInterceptor( OAuth2AuthorizedClientManager authorizedClientManager) {
+    logger.info("requestInterceptor()");
+    ClientRegistration clientRegistration = clientRegistrationRepository.findByRegistrationId("homeoffice");
+    OAuthClientCredentialsFeignManager clientCredentialsFeignManager =
+        new OAuthClientCredentialsFeignManager(authorizedClientManager, clientRegistration);
+    return requestTemplate -> {
+      requestTemplate.header("Authorization", "Bearer " + clientCredentialsFeignManager.getAccessToken());
+    };
+  }
+  
   @Bean
   @ConditionalOnProperty(name = "lev.ssl.publicCertificate")
   public Client levClient(
