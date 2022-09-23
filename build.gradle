@@ -153,7 +153,7 @@ dependencies {
     implementation group: 'io.swagger', name: 'swagger-annotations', version: '1.5.18'
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-oauth2', version: '2.2.5.RELEASE'
-    implementation group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: '2.5.1.RELEASE'
+    implementation group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: '2.5.2.RELEASE'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign'
     implementation group: 'com.heroku.sdk', name: 'env-keystore', version: '1.1.6'
 
