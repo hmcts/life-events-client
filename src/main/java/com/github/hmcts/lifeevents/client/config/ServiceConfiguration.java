@@ -4,7 +4,6 @@ import com.github.hmcts.lifeevents.client.api.DeathApiClient;
 import com.github.hmcts.lifeevents.client.service.DeathService;
 import com.github.hmcts.lifeevents.client.service.DeathServiceImpl;
 import com.github.hmcts.lifeevents.client.service.NoOpDeathServiceImpl;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -29,14 +28,13 @@ public class ServiceConfiguration {
   public ServiceConfiguration(final DeathApiClient deathApiClient, Environment environment) {
     this.deathApiClient = deathApiClient;
     this.environment = environment;
-    logger.info("lev.death.url: " + environment.getProperty("lev.death.url"));
+    logger.info("spring.security.oauth2.client.provider.homeoffice.authorization-uri: " + environment.getProperty("spring.security.oauth2.client.provider.homeoffice.authorization-uri"));
   }
 
   @Bean
   @ConditionalOnProperty(name = "lev.ssl.publicCertificate")
   public DeathService deathService() {
     logger.info("lev.ssl.publicCertificate: " + environment.getProperty("lev.ssl.publicCertificate"));
-    logger.info("lev.bearertoken.clientId: " + environment.getProperty("lev.bearertoken.clientId"));
     return new DeathServiceImpl(deathApiClient);
   }
 
@@ -44,7 +42,6 @@ public class ServiceConfiguration {
   @ConditionalOnMissingBean(value = DeathService.class)
   public DeathService noOpDeathService() {
     logger.info("lev.ssl.publicCertificate: " + environment.getProperty("lev.ssl.publicCertificate"));
-    logger.info("lev.bearertoken.clientId: " + environment.getProperty("lev.bearertoken.clientId"));
     return new NoOpDeathServiceImpl();
   }
 }
