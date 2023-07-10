@@ -5,13 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 /**
  * Informant
  */
 @ApiModel(description = "Informant")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
+@javax.annotation.processing.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
 public class Informant   {
   @JsonProperty("name")
@@ -132,7 +132,7 @@ public class Informant   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Informant {\n");
-    
+
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    usualAddress: ").append(toIndentedString(usualAddress)).append("\n");
     sb.append("    qualification: ").append(toIndentedString(qualification)).append("\n");

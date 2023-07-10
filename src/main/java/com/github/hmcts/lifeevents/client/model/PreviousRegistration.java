@@ -6,13 +6,13 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDate;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 /**
  * Details of the previous record, where one exists
  */
 @ApiModel(description = "Details of the previous record, where one exists")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
+@javax.annotation.processing.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
 public class PreviousRegistration   {
   @JsonProperty("date")
@@ -86,7 +86,7 @@ public class PreviousRegistration   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class PreviousRegistration {\n");
-    
+
     sb.append("    date: ").append(toIndentedString(date)).append("\n");
     sb.append("    systemNumber: ").append(toIndentedString(systemNumber)).append("\n");
     sb.append("}");

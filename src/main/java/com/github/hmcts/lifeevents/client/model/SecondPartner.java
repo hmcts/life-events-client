@@ -8,14 +8,14 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDate;
 
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
 /**
  * The second partner
  */
 @ApiModel(description = "The second partner")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
+@javax.annotation.processing.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
 public class SecondPartner   {
   @JsonProperty("forenames")
@@ -33,9 +33,9 @@ public class SecondPartner   {
    */
   public enum SexEnum {
     MALE("Male"),
-    
+
     FEMALE("Female"),
-    
+
     INDETERMINATE("Indeterminate");
 
     private String value;
@@ -297,7 +297,7 @@ public class SecondPartner   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class SecondPartner {\n");
-    
+
     sb.append("    forenames: ").append(toIndentedString(forenames)).append("\n");
     sb.append("    surname: ").append(toIndentedString(surname)).append("\n");
     sb.append("    dateOfBirth: ").append(toIndentedString(dateOfBirth)).append("\n");

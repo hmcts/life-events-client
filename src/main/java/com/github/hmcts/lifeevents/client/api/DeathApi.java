@@ -8,8 +8,8 @@ package com.github.hmcts.lifeevents.client.api;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 import com.github.hmcts.lifeevents.client.model.GeneralError;
 import com.github.hmcts.lifeevents.client.model.V1Death;
@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
+@javax.annotation.processing.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
 @Validated
 @Api(value = "Death", description = "the Death API")
@@ -43,15 +43,15 @@ public interface DeathApi {
      */
     @ApiOperation(value = "Look up a specific death record", nickname = "readV1Death", notes = "Look up individual death records using the `systemNumber` printed in the bottom-left of the death certificate. (UNSTABLE: This endpoint is subject to change.)", response = V1Death.class, authorizations = {
         @Authorization(value = "bearerToken", scopes = {
-            
+
             })
     }, tags={ "death","v1","unstable", })
-    @ApiResponses(value = { 
+    @ApiResponses(value = {
         @ApiResponse(code = 200, message = "successful operation", response = V1Death.class),
         @ApiResponse(code = 404, message = "Resource not found", response = GeneralError.class),
         @ApiResponse(code = 200, message = "Bad request", response = GeneralError.class) })
     @RequestMapping(value = "/v1/registration/death/{id}",
-        produces = "application/json", 
+        produces = "application/json",
         method = RequestMethod.GET)
     ResponseEntity<V1Death> readV1Death(@ApiParam(value = "The system number printed in the bottom-left of the death certificate",required=true) @PathVariable("id") Integer id);
 
@@ -68,14 +68,14 @@ public interface DeathApi {
      */
     @ApiOperation(value = "Search for death records", nickname = "searchV1Death", notes = "Search for death records by supplying the surname, at least the first forename and either the date of birth or the date of death of the deceased. (UNSTABLE: This endpoint is subject to change.)", response = V1Death.class, responseContainer = "List", authorizations = {
         @Authorization(value = "bearerToken", scopes = {
-            
+
             })
     }, tags={ "death","v1","unstable", })
-    @ApiResponses(value = { 
+    @ApiResponses(value = {
         @ApiResponse(code = 200, message = "successful operation", response = V1Death.class, responseContainer = "List"),
         @ApiResponse(code = 200, message = "Bad request", response = GeneralError.class) })
     @RequestMapping(value = "/v1/registration/death",
-        produces = "application/json", 
+        produces = "application/json",
         method = RequestMethod.GET)
     ResponseEntity<List<V1Death>> searchV1Death(@NotNull @ApiParam(value = "The deceased's forenames. The first name must be provided but middlenames are optional.", required = true) @Valid @RequestParam(value = "forenames", required = true) String forenames,@NotNull @ApiParam(value = "The deceased's surname.", required = true) @Valid @RequestParam(value = "surname", required = true) String surname,@NotNull @ApiParam(value = "The deceased's date of birth or death in international format.", required = true) @Valid @RequestParam(value = "date", required = true) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) LocalDate date);
 

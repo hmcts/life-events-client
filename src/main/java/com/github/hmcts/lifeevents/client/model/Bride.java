@@ -5,13 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 
 /**
  * The bride (or second partner)
  */
 @ApiModel(description = "The bride (or second partner)")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
+@javax.annotation.processing.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
 public class Bride   {
   @JsonProperty("forenames")
@@ -230,7 +230,7 @@ public class Bride   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Bride {\n");
-    
+
     sb.append("    forenames: ").append(toIndentedString(forenames)).append("\n");
     sb.append("    surname: ").append(toIndentedString(surname)).append("\n");
     sb.append("    age: ").append(toIndentedString(age)).append("\n");

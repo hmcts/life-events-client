@@ -6,14 +6,14 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDate;
 
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
 /**
  * A record of a birth (Note: You will only receive the fields you are authorized to view, regardless of whether we hold them on file)
  */
 @ApiModel(description = "A record of a birth (Note: You will only receive the fields you are authorized to view, regardless of whether we hold them on file)")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
+@javax.annotation.processing.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
 public class V1Birth   {
   @JsonProperty("id")
@@ -193,7 +193,7 @@ public class V1Birth   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class V1Birth {\n");
-    
+
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    date: ").append(toIndentedString(date)).append("\n");
     sb.append("    child: ").append(toIndentedString(child)).append("\n");

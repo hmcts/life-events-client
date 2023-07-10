@@ -6,14 +6,14 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDate;
 
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
 /**
  * A record of a birth
  */
 @ApiModel(description = "A record of a birth")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
+@javax.annotation.processing.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
 public class V0Birth   {
   @JsonProperty("date")
@@ -264,7 +264,7 @@ public class V0Birth   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class V0Birth {\n");
-    
+
     sb.append("    date: ").append(toIndentedString(date)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    registrarSignature: ").append(toIndentedString(registrarSignature)).append("\n");

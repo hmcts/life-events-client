@@ -8,13 +8,13 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDate;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 /**
  * Child
  */
 @ApiModel(description = "Child")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
+@javax.annotation.processing.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
 public class Child   {
   @JsonProperty("name")
@@ -32,9 +32,9 @@ public class Child   {
    */
   public enum SexEnum {
     MALE("Male"),
-    
+
     FEMALE("Female"),
-    
+
     INDETERMINATE("Indeterminate");
 
     private String value;
@@ -199,7 +199,7 @@ public class Child   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Child {\n");
-    
+
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    birthplace: ").append(toIndentedString(birthplace)).append("\n");
     sb.append("    dateOfBirth: ").append(toIndentedString(dateOfBirth)).append("\n");

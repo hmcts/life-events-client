@@ -7,13 +7,13 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 
 /**
  * Status flags associated with this record
  */
 @ApiModel(description = "Status flags associated with this record")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
+@javax.annotation.processing.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
 public class Status1   {
   @JsonProperty("blocked")
@@ -27,13 +27,13 @@ public class Status1   {
    */
   public enum CorrectionEnum {
     TYPOGRAPHICAL("Typographical"),
-    
+
     SIMPLE_CLERICAL("Simple clerical"),
-    
+
     COMPLEX_CLERICAL("Complex clerical"),
-    
+
     ERROR_OF_FACT("Error of fact"),
-    
+
     NONE("None");
 
     private String value;
@@ -71,13 +71,13 @@ public class Status1   {
    */
   public enum MarginalNoteEnum {
     RE_REGISTERED("Re-registered"),
-    
+
     COURT_ORDER_IN_PLACE("Court order in place"),
-    
+
     COURT_ORDER_REVOKED("Court order revoked"),
-    
+
     OTHER("Other"),
-    
+
     NONE("None");
 
     private String value;
@@ -118,15 +118,15 @@ public class Status1   {
    */
   public enum ReregistrationEnum {
     NONE("None"),
-    
+
     FATHER_MODIFIED("Father modified"),
-    
+
     FATHER_ADDED("Father added"),
-    
+
     REPLACEMENT_REGISTRATION("Replacement registration"),
-    
+
     OTHER("Other"),
-    
+
     SUBSEQUENTLY_MARRIED("Subsequently married");
 
     private String value;
@@ -307,7 +307,7 @@ public class Status1   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Status1 {\n");
-    
+
     sb.append("    blocked: ").append(toIndentedString(blocked)).append("\n");
     sb.append("    cancelled: ").append(toIndentedString(cancelled)).append("\n");
     sb.append("    correction: ").append(toIndentedString(correction)).append("\n");

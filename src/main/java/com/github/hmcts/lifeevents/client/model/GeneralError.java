@@ -5,13 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 
 /**
  * An error
  */
 @ApiModel(description = "An error")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
+@javax.annotation.processing.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
 public class GeneralError   {
   @JsonProperty("code")
@@ -85,7 +85,7 @@ public class GeneralError   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class GeneralError {\n");
-    
+
     sb.append("    code: ").append(toIndentedString(code)).append("\n");
     sb.append("    message: ").append(toIndentedString(message)).append("\n");
     sb.append("}");

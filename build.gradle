@@ -1,12 +1,12 @@
 plugins {
 //    id 'checkstyle'
     id 'jacoco'
-    id 'io.spring.dependency-management' version '1.0.13.RELEASE'
-    id 'org.springframework.boot' version '2.6.12'
+    id 'io.spring.dependency-management' version '1.1.0'
+    id 'org.springframework.boot' version '3.1.1'
     id 'org.owasp.dependencycheck' version '6.1.1'
     id 'java-library'
     id 'maven-publish'
-    id 'com.github.ben-manes.versions' version '0.36.0'
+    id 'com.github.ben-manes.versions' version '0.46.0'
 }
 
 def buildNumber = System.getenv("RELEASE_VERSION")?.replace("refs/tags/", "") ?: "DEV-SNAPSHOT"
@@ -14,7 +14,12 @@ def buildNumber = System.getenv("RELEASE_VERSION")?.replace("refs/tags/", "") ?:
 group = 'com.github.hmcts'
 version buildNumber
 description = 'Client for HMPO Life Events service'
-sourceCompatibility = 11
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
 
 //checkstyle {
 //    maxWarnings = 0
@@ -57,7 +62,11 @@ sourceSets {
 }
 
 tasks.withType(JavaCompile) {
-    options.compilerArgs << '-parameters' << '-Xlint:deprecation'
+    options.compilerArgs << '-parameters'
+}
+
+tasks.withType(JavaExec).configureEach {
+    javaLauncher.set(javaToolchains.launcherFor(java.toolchain))
 }
 
 task integration(type: Test, description: 'Runs the integration tests.', group: 'Verification') {
@@ -72,9 +81,9 @@ jacocoTestReport {
             fileTree(dir: it, exclude: [])
         }))}
     reports {
-        xml.enabled = true
-        csv.enabled = false
-        xml.destination = file("${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml")
+        xml.required = true
+        csv.required = false
+        xml.outputLocation = file("${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml")
     }
 }
 
@@ -143,23 +152,33 @@ publishing {
 }
 
 ext {
-    set('springCloudVersion', "2021.0.4")
+    set('springCloudVersion', "2022.0.3")
+    set('jakarta-servlet.version', '5.0.0')
 }
 
 dependencies {
-    implementation group: 'io.swagger', name: 'swagger-annotations', version: '1.5.18'
-    implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.0.3'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign'
     implementation group: 'com.heroku.sdk', name: 'env-keystore', version: '1.1.6'
+    implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.0.2'
 
-    implementation group: 'io.github.openfeign', name: 'feign-jackson', version: '11.0'
+    implementation group: 'io.github.openfeign', name: 'feign-jackson', version: '12.3'
 
-    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.9.6'
-    implementation group: 'org.openapitools', name: 'jackson-databind-nullable', version: '0.1.0'
+    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.15.2'
+    implementation group: 'org.openapitools', name: 'jackson-databind-nullable', version: '0.2.6'
     implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.0.16.Final'
 
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.7.1'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation("org.springframework.boot:spring-boot-starter-jetty")
+    modules {
+        module("org.springframework.boot:spring-boot-starter-tomcat") {
+            replacedBy("org.springframework.boot:spring-boot-starter-jetty", "Use Jetty instead of Tomcat")
+        }
+    }
+
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.9.3'
     testImplementation group: 'com.github.tomakehurst', name: 'wiremock', version: '2.27.2'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'junit', module: 'junit'
@@ -171,6 +190,14 @@ dependencies {
     integrationTestImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
         exclude group: 'junit', module: 'junit'
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+}
+
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        if (details.requested.group == 'jakarta.servlet') {
+            details.useVersion '5.0.0'
+        }
     }
 }
 

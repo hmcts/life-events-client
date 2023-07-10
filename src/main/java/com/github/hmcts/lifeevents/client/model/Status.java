@@ -7,13 +7,13 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 
 /**
  * Status flags associated with this birth
  */
 @ApiModel(description = "Status flags associated with this birth")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
+@javax.annotation.processing.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
 public class Status   {
   @JsonProperty("blockedRegistration")
@@ -30,15 +30,15 @@ public class Status   {
    */
   public enum ReRegisteredEnum {
     NONE("None"),
-    
+
     FATHER_MODIFIED("Father modified"),
-    
+
     FATHER_ADDED("Father added"),
-    
+
     REPLACEMENT_REGISTRATION("Replacement registration"),
-    
+
     OTHER("Other"),
-    
+
     SUBSEQUENTLY_MARRIED("Subsequently married");
 
     private String value;
@@ -76,13 +76,13 @@ public class Status   {
    */
   public enum CorrectionEnum {
     TYPOGRAPHICAL("Typographical"),
-    
+
     SIMPLE_CLERICAL("Simple clerical"),
-    
+
     COMPLEX_CLERICAL("Complex clerical"),
-    
+
     ERROR_OF_FACT("Error of fact"),
-    
+
     NONE("None");
 
     private String value;
@@ -120,13 +120,13 @@ public class Status   {
    */
   public enum MarginalNoteEnum {
     RE_REGISTERED("Re-registered"),
-    
+
     COURT_ORDER_IN_PLACE("Court order in place"),
-    
+
     COURT_ORDER_REVOKED("Court order revoked"),
-    
+
     OTHER("Other"),
-    
+
     NONE("None");
 
     private String value;
@@ -307,7 +307,7 @@ public class Status   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Status {\n");
-    
+
     sb.append("    blockedRegistration: ").append(toIndentedString(blockedRegistration)).append("\n");
     sb.append("    cancelled: ").append(toIndentedString(cancelled)).append("\n");
     sb.append("    potentiallyFictitiousBirth: ").append(toIndentedString(potentiallyFictitiousBirth)).append("\n");
