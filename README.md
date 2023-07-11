@@ -2,7 +2,7 @@
 
 
 Client for HMPO Life Events service
-
+ 
 ## Code generation from Swagger
 
 Generated using [openapi-generator](https://github.com/OpenAPITools/openapi-generator)
