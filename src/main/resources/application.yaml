@@ -7,6 +7,8 @@ lev:
     password: ${LEV_PASSWORD:}
 
 spring:
+  main:
+    allow-bean-definition-overriding: true
   security:
     oauth2:
       client:
