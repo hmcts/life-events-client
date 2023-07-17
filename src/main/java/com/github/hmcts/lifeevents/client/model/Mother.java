@@ -2,34 +2,27 @@ package com.github.hmcts.lifeevents.client.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
 import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Mother
  */
-@ApiModel(description = "Mother")
-@javax.annotation.processing.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
-public class Mother   {
-  @JsonProperty("name")
+@Schema(name = "Mother", description = "Mother")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-07-17T08:55:08.360589+01:00[Europe/London]")
+public class Mother {
+
   private Name name;
 
-  @JsonProperty("birthplace")
   private String birthplace;
 
-  @JsonProperty("occupation")
   private String occupation;
 
-  @JsonProperty("maidenSurname")
   private String maidenSurname;
 
-  @JsonProperty("marriageSurname")
   private String marriageSurname;
 
-  @JsonProperty("usualAddress")
   private String usualAddress;
 
   public Mother name(Name name) {
@@ -41,10 +34,9 @@ public class Mother   {
    * Get name
    * @return name
   */
-  @ApiModelProperty(value = "")
-
   @Valid
-
+  @Schema(name = "name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("name")
   public Name getName() {
     return name;
   }
@@ -62,9 +54,9 @@ public class Mother   {
    * The birthplace of the person
    * @return birthplace
   */
-  @ApiModelProperty(example = "Kensington", value = "The birthplace of the person")
 
-
+  @Schema(name = "birthplace", example = "Kensington", description = "The birthplace of the person", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("birthplace")
   public String getBirthplace() {
     return birthplace;
   }
@@ -82,9 +74,9 @@ public class Mother   {
    * The occupation of the parent
    * @return occupation
   */
-  @ApiModelProperty(example = "Carpenter", value = "The occupation of the parent")
 
-
+  @Schema(name = "occupation", example = "Carpenter", description = "The occupation of the parent", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("occupation")
   public String getOccupation() {
     return occupation;
   }
@@ -102,9 +94,9 @@ public class Mother   {
    * Maiden surname
    * @return maidenSurname
   */
-  @ApiModelProperty(example = "Black", value = "Maiden surname")
 
-
+  @Schema(name = "maidenSurname", example = "Black", description = "Maiden surname", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("maidenSurname")
   public String getMaidenSurname() {
     return maidenSurname;
   }
@@ -122,9 +114,9 @@ public class Mother   {
    * Surname at marriage if different from maiden surname
    * @return marriageSurname
   */
-  @ApiModelProperty(example = "White", value = "Surname at marriage if different from maiden surname")
 
-
+  @Schema(name = "marriageSurname", example = "White", description = "Surname at marriage if different from maiden surname", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("marriageSurname")
   public String getMarriageSurname() {
     return marriageSurname;
   }
@@ -142,9 +134,9 @@ public class Mother   {
    * Usual address (if different from the place of child's birth)
    * @return usualAddress
   */
-  @ApiModelProperty(example = "34 Matriarchs Place, Mumstown, Mumford", value = "Usual address (if different from the place of child's birth)")
 
-
+  @Schema(name = "usualAddress", example = "34 Matriarchs Place, Mumstown, Mumford", description = "Usual address (if different from the place of child's birth)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("usualAddress")
   public String getUsualAddress() {
     return usualAddress;
   }
@@ -153,9 +145,8 @@ public class Mother   {
     this.usualAddress = usualAddress;
   }
 
-
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -180,7 +171,6 @@ public class Mother   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Mother {\n");
-
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    birthplace: ").append(toIndentedString(birthplace)).append("\n");
     sb.append("    occupation: ").append(toIndentedString(occupation)).append("\n");
@@ -195,7 +185,7 @@ public class Mother   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

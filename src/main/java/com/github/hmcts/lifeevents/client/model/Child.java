@@ -4,27 +4,24 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDate;
-
+import org.springframework.format.annotation.DateTimeFormat;
 import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Child
  */
-@ApiModel(description = "Child")
-@javax.annotation.processing.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
-public class Child   {
-  @JsonProperty("name")
+@Schema(name = "Child", description = "Child")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-07-17T08:55:08.360589+01:00[Europe/London]")
+public class Child {
+
   private Name name;
 
-  @JsonProperty("birthplace")
   private String birthplace;
 
-  @JsonProperty("dateOfBirth")
-  @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE)
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
   private LocalDate dateOfBirth;
 
   /**
@@ -64,10 +61,8 @@ public class Child   {
     }
   }
 
-  @JsonProperty("sex")
   private SexEnum sex;
 
-  @JsonProperty("originalName")
   private OriginalName originalName;
 
   public Child name(Name name) {
@@ -79,10 +74,9 @@ public class Child   {
    * Get name
    * @return name
   */
-  @ApiModelProperty(value = "")
-
   @Valid
-
+  @Schema(name = "name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("name")
   public Name getName() {
     return name;
   }
@@ -100,9 +94,9 @@ public class Child   {
    * The birthplace of the person
    * @return birthplace
   */
-  @ApiModelProperty(example = "Kensington", value = "The birthplace of the person")
 
-
+  @Schema(name = "birthplace", example = "Kensington", description = "The birthplace of the person", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("birthplace")
   public String getBirthplace() {
     return birthplace;
   }
@@ -120,10 +114,9 @@ public class Child   {
    * Date of birth of the person
    * @return dateOfBirth
   */
-  @ApiModelProperty(example = "Mon Aug 08 01:00:00 BST 2011", value = "Date of birth of the person")
-
   @Valid
-
+  @Schema(name = "dateOfBirth", example = "Mon Aug 08 01:00:00 BST 2011", description = "Date of birth of the person", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("dateOfBirth")
   public LocalDate getDateOfBirth() {
     return dateOfBirth;
   }
@@ -141,9 +134,9 @@ public class Child   {
    * Sex of the person
    * @return sex
   */
-  @ApiModelProperty(example = "Indeterminate", value = "Sex of the person")
 
-
+  @Schema(name = "sex", example = "Indeterminate", description = "Sex of the person", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("sex")
   public SexEnum getSex() {
     return sex;
   }
@@ -161,10 +154,9 @@ public class Child   {
    * Get originalName
    * @return originalName
   */
-  @ApiModelProperty(value = "")
-
   @Valid
-
+  @Schema(name = "originalName", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("originalName")
   public OriginalName getOriginalName() {
     return originalName;
   }
@@ -173,9 +165,8 @@ public class Child   {
     this.originalName = originalName;
   }
 
-
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -199,7 +190,6 @@ public class Child   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Child {\n");
-
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    birthplace: ").append(toIndentedString(birthplace)).append("\n");
     sb.append("    dateOfBirth: ").append(toIndentedString(dateOfBirth)).append("\n");
@@ -213,7 +203,7 @@ public class Child   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

@@ -3,29 +3,28 @@ package com.github.hmcts.lifeevents.client.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDate;
-
+import org.springframework.format.annotation.DateTimeFormat;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
+import javax.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * The second partner
  */
-@ApiModel(description = "The second partner")
-@javax.annotation.processing.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
-public class SecondPartner   {
-  @JsonProperty("forenames")
+@Schema(name = "Second_partner", description = "The second partner")
+@JsonTypeName("Second_partner")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-07-17T08:55:08.360589+01:00[Europe/London]")
+public class SecondPartner {
+
   private String forenames;
 
-  @JsonProperty("surname")
   private String surname;
 
-  @JsonProperty("dateOfBirth")
-  @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE)
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
   private LocalDate dateOfBirth;
 
   /**
@@ -65,23 +64,35 @@ public class SecondPartner   {
     }
   }
 
-  @JsonProperty("sex")
   private SexEnum sex;
 
-  @JsonProperty("occupation")
   private String occupation;
 
-  @JsonProperty("retired")
   private Boolean retired;
 
-  @JsonProperty("address")
   private String address;
 
-  @JsonProperty("condition")
   private String condition;
 
-  @JsonProperty("signature")
   private String signature;
+
+  /**
+   * Default constructor
+   * @deprecated Use {@link SecondPartner#SecondPartner(String, String, String)}
+   */
+  @Deprecated
+  public SecondPartner() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public SecondPartner(String forenames, String surname, String condition) {
+    this.forenames = forenames;
+    this.surname = surname;
+    this.condition = condition;
+  }
 
   public SecondPartner forenames(String forenames) {
     this.forenames = forenames;
@@ -92,10 +103,9 @@ public class SecondPartner   {
    * Forenames of the person
    * @return forenames
   */
-  @ApiModelProperty(example = "Joan Narcissus Ouroboros", required = true, value = "Forenames of the person")
   @NotNull
-
-
+  @Schema(name = "forenames", example = "Joan Narcissus Ouroboros", description = "Forenames of the person", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("forenames")
   public String getForenames() {
     return forenames;
   }
@@ -113,10 +123,9 @@ public class SecondPartner   {
    * Surname of the person
    * @return surname
   */
-  @ApiModelProperty(example = "BLACK", required = true, value = "Surname of the person")
   @NotNull
-
-
+  @Schema(name = "surname", example = "BLACK", description = "Surname of the person", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("surname")
   public String getSurname() {
     return surname;
   }
@@ -134,10 +143,9 @@ public class SecondPartner   {
    * Date the person was born
    * @return dateOfBirth
   */
-  @ApiModelProperty(example = "Mon Aug 08 01:00:00 BST 2011", value = "Date the person was born")
-
   @Valid
-
+  @Schema(name = "dateOfBirth", example = "Mon Aug 08 01:00:00 BST 2011", description = "Date the person was born", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("dateOfBirth")
   public LocalDate getDateOfBirth() {
     return dateOfBirth;
   }
@@ -155,9 +163,9 @@ public class SecondPartner   {
    * Sex of the person
    * @return sex
   */
-  @ApiModelProperty(example = "Indeterminate", value = "Sex of the person")
 
-
+  @Schema(name = "sex", example = "Indeterminate", description = "Sex of the person", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("sex")
   public SexEnum getSex() {
     return sex;
   }
@@ -175,9 +183,9 @@ public class SecondPartner   {
    * The occupation of the person
    * @return occupation
   */
-  @ApiModelProperty(example = "Unemployed", value = "The occupation of the person")
 
-
+  @Schema(name = "occupation", example = "Unemployed", description = "The occupation of the person", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("occupation")
   public String getOccupation() {
     return occupation;
   }
@@ -195,9 +203,9 @@ public class SecondPartner   {
    * Whether the person was retired
    * @return retired
   */
-  @ApiModelProperty(example = "false", value = "Whether the person was retired")
 
-
+  @Schema(name = "retired", example = "false", description = "Whether the person was retired", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("retired")
   public Boolean getRetired() {
     return retired;
   }
@@ -215,9 +223,9 @@ public class SecondPartner   {
    * The person's address
    * @return address
   */
-  @ApiModelProperty(example = "888 Bride House, 8 Bride grove, Wedford, Wedfordshire, BR1 2E", value = "The person's address")
 
-
+  @Schema(name = "address", example = "888 Bride House, 8 Bride grove, Wedford, Wedfordshire, BR1 2E", description = "The person's address", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("address")
   public String getAddress() {
     return address;
   }
@@ -235,10 +243,9 @@ public class SecondPartner   {
    * Whether the person was single, divorced, widowed etc.
    * @return condition
   */
-  @ApiModelProperty(example = "Single", required = true, value = "Whether the person was single, divorced, widowed etc.")
   @NotNull
-
-
+  @Schema(name = "condition", example = "Single", description = "Whether the person was single, divorced, widowed etc.", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("condition")
   public String getCondition() {
     return condition;
   }
@@ -256,9 +263,9 @@ public class SecondPartner   {
    * A digital representation of the person's signature
    * @return signature
   */
-  @ApiModelProperty(example = "J.N.O. Black", value = "A digital representation of the person's signature")
 
-
+  @Schema(name = "signature", example = "J.N.O. Black", description = "A digital representation of the person's signature", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("signature")
   public String getSignature() {
     return signature;
   }
@@ -267,9 +274,8 @@ public class SecondPartner   {
     this.signature = signature;
   }
 
-
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -297,7 +303,6 @@ public class SecondPartner   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class SecondPartner {\n");
-
     sb.append("    forenames: ").append(toIndentedString(forenames)).append("\n");
     sb.append("    surname: ").append(toIndentedString(surname)).append("\n");
     sb.append("    dateOfBirth: ").append(toIndentedString(dateOfBirth)).append("\n");
@@ -315,7 +320,7 @@ public class SecondPartner   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

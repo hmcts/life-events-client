@@ -2,20 +2,36 @@ package com.github.hmcts.lifeevents.client.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
-import jakarta.validation.constraints.*;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import javax.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Status flags associated with this record
  */
-@ApiModel(description = "Status flags associated with this record")
-@javax.annotation.processing.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
-public class Status2   {
-  @JsonProperty("blocked")
+@Schema(name = "Status_2", description = "Status flags associated with this record")
+@JsonTypeName("Status_2")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-07-17T08:55:08.360589+01:00[Europe/London]")
+public class Status2 {
+
   private Boolean blocked;
+
+  /**
+   * Default constructor
+   * @deprecated Use {@link Status2#Status2(Boolean)}
+   */
+  @Deprecated
+  public Status2() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public Status2(Boolean blocked) {
+    this.blocked = blocked;
+  }
 
   public Status2 blocked(Boolean blocked) {
     this.blocked = blocked;
@@ -26,10 +42,9 @@ public class Status2   {
    * Indicates if data for this record has been blocked
    * @return blocked
   */
-  @ApiModelProperty(required = true, value = "Indicates if data for this record has been blocked")
   @NotNull
-
-
+  @Schema(name = "blocked", description = "Indicates if data for this record has been blocked", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("blocked")
   public Boolean getBlocked() {
     return blocked;
   }
@@ -38,9 +53,8 @@ public class Status2   {
     this.blocked = blocked;
   }
 
-
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -60,7 +74,6 @@ public class Status2   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Status2 {\n");
-
     sb.append("    blocked: ").append(toIndentedString(blocked)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -70,7 +83,7 @@ public class Status2   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

@@ -2,23 +2,40 @@ package com.github.hmcts.lifeevents.client.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import javax.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-import jakarta.validation.constraints.*;
 
 /**
  * An error
  */
-@ApiModel(description = "An error")
-@javax.annotation.processing.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
-public class GeneralError   {
-  @JsonProperty("code")
+@Schema(name = "generalError", description = "An error")
+@JsonTypeName("generalError")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-07-17T08:55:08.360589+01:00[Europe/London]")
+public class GeneralError {
+
   private String code;
 
-  @JsonProperty("message")
   private String message;
+
+  /**
+   * Default constructor
+   * @deprecated Use {@link GeneralError#GeneralError(String, String)}
+   */
+  @Deprecated
+  public GeneralError() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public GeneralError(String code, String message) {
+    this.code = code;
+    this.message = message;
+  }
 
   public GeneralError code(String code) {
     this.code = code;
@@ -29,10 +46,9 @@ public class GeneralError   {
    * The type of error
    * @return code
   */
-  @ApiModelProperty(example = "BadRequest", required = true, value = "The type of error")
   @NotNull
-
-
+  @Schema(name = "code", example = "BadRequest", description = "The type of error", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("code")
   public String getCode() {
     return code;
   }
@@ -50,10 +66,9 @@ public class GeneralError   {
    * The error message
    * @return message
   */
-  @ApiModelProperty(example = "Must provide the dateOfBirth parameter", required = true, value = "The error message")
   @NotNull
-
-
+  @Schema(name = "message", example = "Must provide the dateOfBirth parameter", description = "The error message", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("message")
   public String getMessage() {
     return message;
   }
@@ -62,9 +77,8 @@ public class GeneralError   {
     this.message = message;
   }
 
-
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -85,7 +99,6 @@ public class GeneralError   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class GeneralError {\n");
-
     sb.append("    code: ").append(toIndentedString(code)).append("\n");
     sb.append("    message: ").append(toIndentedString(message)).append("\n");
     sb.append("}");
@@ -96,7 +109,7 @@ public class GeneralError   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

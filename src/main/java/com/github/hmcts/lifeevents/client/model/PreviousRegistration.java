@@ -2,24 +2,24 @@ package com.github.hmcts.lifeevents.client.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.time.LocalDate;
-
+import org.springframework.format.annotation.DateTimeFormat;
 import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Details of the previous record, where one exists
  */
-@ApiModel(description = "Details of the previous record, where one exists")
-@javax.annotation.processing.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
-public class PreviousRegistration   {
-  @JsonProperty("date")
-  @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE)
+@Schema(name = "Previous_registration", description = "Details of the previous record, where one exists")
+@JsonTypeName("Previous_registration")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-07-17T08:55:08.360589+01:00[Europe/London]")
+public class PreviousRegistration {
+
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
   private LocalDate date;
 
-  @JsonProperty("systemNumber")
   private Integer systemNumber;
 
   public PreviousRegistration date(LocalDate date) {
@@ -31,10 +31,9 @@ public class PreviousRegistration   {
    * Date of the event
    * @return date
   */
-  @ApiModelProperty(example = "Tue Aug 09 01:00:00 BST 2011", value = "Date of the event")
-
   @Valid
-
+  @Schema(name = "date", example = "Tue Aug 09 01:00:00 BST 2011", description = "Date of the event", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("date")
   public LocalDate getDate() {
     return date;
   }
@@ -52,9 +51,9 @@ public class PreviousRegistration   {
    * System number for this event
    * @return systemNumber
   */
-  @ApiModelProperty(value = "System number for this event")
 
-
+  @Schema(name = "systemNumber", description = "System number for this event", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("systemNumber")
   public Integer getSystemNumber() {
     return systemNumber;
   }
@@ -63,9 +62,8 @@ public class PreviousRegistration   {
     this.systemNumber = systemNumber;
   }
 
-
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -86,7 +84,6 @@ public class PreviousRegistration   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class PreviousRegistration {\n");
-
     sb.append("    date: ").append(toIndentedString(date)).append("\n");
     sb.append("    systemNumber: ").append(toIndentedString(systemNumber)).append("\n");
     sb.append("}");
@@ -97,7 +94,7 @@ public class PreviousRegistration   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

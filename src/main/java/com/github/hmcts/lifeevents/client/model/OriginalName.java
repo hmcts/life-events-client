@@ -2,26 +2,25 @@ package com.github.hmcts.lifeevents.client.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * The name originally given to the person
  */
-@ApiModel(description = "The name originally given to the person")
-@javax.annotation.processing.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
-public class OriginalName   {
-  @JsonProperty("givenName")
+@Schema(name = "Original_name", description = "The name originally given to the person")
+@JsonTypeName("Original_name")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-07-17T08:55:08.360589+01:00[Europe/London]")
+public class OriginalName {
+
   private String givenName;
 
-  @JsonProperty("surname")
   private String surname;
 
-  @JsonProperty("fullName")
   private String fullName;
 
-  @JsonProperty("qualifier")
   private String qualifier;
 
   public OriginalName givenName(String givenName) {
@@ -33,9 +32,9 @@ public class OriginalName   {
    * Given name of the person
    * @return givenName
   */
-  @ApiModelProperty(example = "Joan Narcissus Ouroboros", value = "Given name of the person")
 
-
+  @Schema(name = "givenName", example = "Joan Narcissus Ouroboros", description = "Given name of the person", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("givenName")
   public String getGivenName() {
     return givenName;
   }
@@ -53,9 +52,9 @@ public class OriginalName   {
    * Surname of the person
    * @return surname
   */
-  @ApiModelProperty(example = "Smith", value = "Surname of the person")
 
-
+  @Schema(name = "surname", example = "Smith", description = "Surname of the person", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("surname")
   public String getSurname() {
     return surname;
   }
@@ -73,9 +72,9 @@ public class OriginalName   {
    * Full name of the person
    * @return fullName
   */
-  @ApiModelProperty(example = "Joan Narcissus Ouroboros Smith", value = "Full name of the person")
 
-
+  @Schema(name = "fullName", example = "Joan Narcissus Ouroboros Smith", description = "Full name of the person", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("fullName")
   public String getFullName() {
     return fullName;
   }
@@ -93,9 +92,9 @@ public class OriginalName   {
    * Details about how the full name was made
    * @return qualifier
   */
-  @ApiModelProperty(example = "generated from prepending forename to surname", value = "Details about how the full name was made")
 
-
+  @Schema(name = "qualifier", example = "generated from prepending forename to surname", description = "Details about how the full name was made", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("qualifier")
   public String getQualifier() {
     return qualifier;
   }
@@ -104,9 +103,8 @@ public class OriginalName   {
     this.qualifier = qualifier;
   }
 
-
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -129,7 +127,6 @@ public class OriginalName   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class OriginalName {\n");
-    
     sb.append("    givenName: ").append(toIndentedString(givenName)).append("\n");
     sb.append("    surname: ").append(toIndentedString(surname)).append("\n");
     sb.append("    fullName: ").append(toIndentedString(fullName)).append("\n");
@@ -142,7 +139,7 @@ public class OriginalName   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

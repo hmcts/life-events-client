@@ -2,41 +2,50 @@ package com.github.hmcts.lifeevents.client.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
-import jakarta.validation.constraints.*;
+import javax.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * The groom (or first partner)
  */
-@ApiModel(description = "The groom (or first partner)")
-@javax.annotation.processing.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
-public class Groom   {
-  @JsonProperty("forenames")
+@Schema(name = "Groom", description = "The groom (or first partner)")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-07-17T08:55:08.360589+01:00[Europe/London]")
+public class Groom {
+
   private String forenames;
 
-  @JsonProperty("surname")
   private String surname;
 
-  @JsonProperty("age")
   private Integer age;
 
-  @JsonProperty("occupation")
   private String occupation;
 
-  @JsonProperty("retired")
   private Boolean retired;
 
-  @JsonProperty("address")
   private String address;
 
-  @JsonProperty("condition")
   private String condition;
 
-  @JsonProperty("signature")
   private String signature;
+
+  /**
+   * Default constructor
+   * @deprecated Use {@link Groom#Groom(String, String, String)}
+   */
+  @Deprecated
+  public Groom() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public Groom(String forenames, String surname, String condition) {
+    this.forenames = forenames;
+    this.surname = surname;
+    this.condition = condition;
+  }
 
   public Groom forenames(String forenames) {
     this.forenames = forenames;
@@ -47,10 +56,9 @@ public class Groom   {
    * Forenames of the person
    * @return forenames
   */
-  @ApiModelProperty(example = "Joan Narcissus Ouroboros", required = true, value = "Forenames of the person")
   @NotNull
-
-
+  @Schema(name = "forenames", example = "Joan Narcissus Ouroboros", description = "Forenames of the person", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("forenames")
   public String getForenames() {
     return forenames;
   }
@@ -68,10 +76,9 @@ public class Groom   {
    * Surname of the person
    * @return surname
   */
-  @ApiModelProperty(example = "SMITH", required = true, value = "Surname of the person")
   @NotNull
-
-
+  @Schema(name = "surname", example = "SMITH", description = "Surname of the person", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("surname")
   public String getSurname() {
     return surname;
   }
@@ -89,9 +96,9 @@ public class Groom   {
    * Age of the person when they got married
    * @return age
   */
-  @ApiModelProperty(value = "Age of the person when they got married")
 
-
+  @Schema(name = "age", description = "Age of the person when they got married", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("age")
   public Integer getAge() {
     return age;
   }
@@ -109,9 +116,9 @@ public class Groom   {
    * The occupation of the person
    * @return occupation
   */
-  @ApiModelProperty(example = "Unemployed", value = "The occupation of the person")
 
-
+  @Schema(name = "occupation", example = "Unemployed", description = "The occupation of the person", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("occupation")
   public String getOccupation() {
     return occupation;
   }
@@ -129,9 +136,9 @@ public class Groom   {
    * Whether the person was retired
    * @return retired
   */
-  @ApiModelProperty(example = "false", value = "Whether the person was retired")
 
-
+  @Schema(name = "retired", example = "false", description = "Whether the person was retired", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("retired")
   public Boolean getRetired() {
     return retired;
   }
@@ -149,9 +156,9 @@ public class Groom   {
    * The person's address
    * @return address
   */
-  @ApiModelProperty(example = "888 Groom House, 8 Groom grove, Wedford, Wedfordshire, GR0 0M", value = "The person's address")
 
-
+  @Schema(name = "address", example = "888 Groom House, 8 Groom grove, Wedford, Wedfordshire, GR0 0M", description = "The person's address", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("address")
   public String getAddress() {
     return address;
   }
@@ -169,10 +176,9 @@ public class Groom   {
    * Whether the person was single, divorced, widowed etc.
    * @return condition
   */
-  @ApiModelProperty(example = "Single", required = true, value = "Whether the person was single, divorced, widowed etc.")
   @NotNull
-
-
+  @Schema(name = "condition", example = "Single", description = "Whether the person was single, divorced, widowed etc.", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("condition")
   public String getCondition() {
     return condition;
   }
@@ -190,9 +196,9 @@ public class Groom   {
    * A digital representation of the person's signature
    * @return signature
   */
-  @ApiModelProperty(example = "J.N.O. Smith", value = "A digital representation of the person's signature")
 
-
+  @Schema(name = "signature", example = "J.N.O. Smith", description = "A digital representation of the person's signature", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("signature")
   public String getSignature() {
     return signature;
   }
@@ -201,9 +207,8 @@ public class Groom   {
     this.signature = signature;
   }
 
-
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -230,7 +235,6 @@ public class Groom   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Groom {\n");
-
     sb.append("    forenames: ").append(toIndentedString(forenames)).append("\n");
     sb.append("    surname: ").append(toIndentedString(surname)).append("\n");
     sb.append("    age: ").append(toIndentedString(age)).append("\n");
@@ -247,7 +251,7 @@ public class Groom   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

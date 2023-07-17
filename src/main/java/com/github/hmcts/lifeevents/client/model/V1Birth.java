@@ -2,38 +2,55 @@ package com.github.hmcts.lifeevents.client.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.time.LocalDate;
-
+import org.springframework.format.annotation.DateTimeFormat;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
+import javax.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * A record of a birth (Note: You will only receive the fields you are authorized to view, regardless of whether we hold them on file)
  */
-@ApiModel(description = "A record of a birth (Note: You will only receive the fields you are authorized to view, regardless of whether we hold them on file)")
-@javax.annotation.processing.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
-public class V1Birth   {
-  @JsonProperty("id")
+@Schema(name = "v1-Birth", description = "A record of a birth (Note: You will only receive the fields you are authorized to view, regardless of whether we hold them on file)")
+@JsonTypeName("v1-Birth")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-07-17T08:55:08.360589+01:00[Europe/London]")
+public class V1Birth {
+
   private Integer id;
 
-  @JsonProperty("date")
-  @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE)
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
   private LocalDate date;
 
-  @JsonProperty("child")
-  private Child2 child;
+  private Child1 child;
 
-  @JsonProperty("mother")
   private Mother1 mother;
 
-  @JsonProperty("father")
   private Father1 father;
 
-  @JsonProperty("status")
   private Status1 status;
+
+  /**
+   * Default constructor
+   * @deprecated Use {@link V1Birth#V1Birth(Integer, LocalDate, Child1, Mother1, Father1, Status1)}
+   */
+  @Deprecated
+  public V1Birth() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public V1Birth(Integer id, LocalDate date, Child1 child, Mother1 mother, Father1 father, Status1 status) {
+    this.id = id;
+    this.date = date;
+    this.child = child;
+    this.mother = mother;
+    this.father = father;
+    this.status = status;
+  }
 
   public V1Birth id(Integer id) {
     this.id = id;
@@ -44,10 +61,9 @@ public class V1Birth   {
    * System number for this event
    * @return id
   */
-  @ApiModelProperty(required = true, value = "System number for this event")
   @NotNull
-
-
+  @Schema(name = "id", description = "System number for this event", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("id")
   public Integer getId() {
     return id;
   }
@@ -65,11 +81,9 @@ public class V1Birth   {
    * Date the birth was registered
    * @return date
   */
-  @ApiModelProperty(example = "Tue Aug 09 01:00:00 BST 2011", required = true, value = "Date the birth was registered")
-  @NotNull
-
-  @Valid
-
+  @NotNull @Valid
+  @Schema(name = "date", example = "Tue Aug 09 01:00:00 BST 2011", description = "Date the birth was registered", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("date")
   public LocalDate getDate() {
     return date;
   }
@@ -78,7 +92,7 @@ public class V1Birth   {
     this.date = date;
   }
 
-  public V1Birth child(Child2 child) {
+  public V1Birth child(Child1 child) {
     this.child = child;
     return this;
   }
@@ -87,16 +101,14 @@ public class V1Birth   {
    * Get child
    * @return child
   */
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
-
-  @Valid
-
-  public Child2 getChild() {
+  @NotNull @Valid
+  @Schema(name = "child", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("child")
+  public Child1 getChild() {
     return child;
   }
 
-  public void setChild(Child2 child) {
+  public void setChild(Child1 child) {
     this.child = child;
   }
 
@@ -109,11 +121,9 @@ public class V1Birth   {
    * Get mother
    * @return mother
   */
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
-
-  @Valid
-
+  @NotNull @Valid
+  @Schema(name = "mother", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("mother")
   public Mother1 getMother() {
     return mother;
   }
@@ -131,11 +141,9 @@ public class V1Birth   {
    * Get father
    * @return father
   */
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
-
-  @Valid
-
+  @NotNull @Valid
+  @Schema(name = "father", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("father")
   public Father1 getFather() {
     return father;
   }
@@ -153,11 +161,9 @@ public class V1Birth   {
    * Get status
    * @return status
   */
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
-
-  @Valid
-
+  @NotNull @Valid
+  @Schema(name = "status", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("status")
   public Status1 getStatus() {
     return status;
   }
@@ -166,9 +172,8 @@ public class V1Birth   {
     this.status = status;
   }
 
-
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -193,7 +198,6 @@ public class V1Birth   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class V1Birth {\n");
-
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    date: ").append(toIndentedString(date)).append("\n");
     sb.append("    child: ").append(toIndentedString(child)).append("\n");
@@ -208,7 +212,7 @@ public class V1Birth   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

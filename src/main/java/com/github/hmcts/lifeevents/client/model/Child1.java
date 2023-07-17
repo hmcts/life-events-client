@@ -3,32 +3,35 @@ package com.github.hmcts.lifeevents.client.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDate;
-
+import org.springframework.format.annotation.DateTimeFormat;
 import jakarta.validation.Valid;
+import javax.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
- * Child
+ * The child that was born
  */
-@ApiModel(description = "Child")
-@javax.annotation.processing.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
-public class Child1   {
-  @JsonProperty("name")
-  private Name name;
+@Schema(name = "Child_1", description = "The child that was born")
+@JsonTypeName("Child_1")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-07-17T08:55:08.360589+01:00[Europe/London]")
+public class Child1 {
 
-  @JsonProperty("birthplace")
-  private String birthplace;
+  private String forenames;
 
-  @JsonProperty("dateOfBirth")
-  @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE)
+  private String originalForenames;
+
+  private String surname;
+
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
   private LocalDate dateOfBirth;
 
   /**
-   * Sex of the person
+   * Sex of the child
    */
   public enum SexEnum {
     MALE("Male"),
@@ -64,51 +67,87 @@ public class Child1   {
     }
   }
 
-  @JsonProperty("sex")
   private SexEnum sex;
 
-  @JsonProperty("originalName")
-  private OriginalName1 originalName;
+  private String birthplace;
 
-  public Child1 name(Name name) {
-    this.name = name;
+  /**
+   * Default constructor
+   * @deprecated Use {@link Child1#Child1(String, String, LocalDate, SexEnum)}
+   */
+  @Deprecated
+  public Child1() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public Child1(String forenames, String surname, LocalDate dateOfBirth, SexEnum sex) {
+    this.forenames = forenames;
+    this.surname = surname;
+    this.dateOfBirth = dateOfBirth;
+    this.sex = sex;
+  }
+
+  public Child1 forenames(String forenames) {
+    this.forenames = forenames;
     return this;
   }
 
   /**
-   * Get name
-   * @return name
+   * Forenames of the child
+   * @return forenames
   */
-  @ApiModelProperty(value = "")
-
-  @Valid
-
-  public Name getName() {
-    return name;
+  @NotNull
+  @Schema(name = "forenames", example = "Joan Narcissus Ouroboros", description = "Forenames of the child", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("forenames")
+  public String getForenames() {
+    return forenames;
   }
 
-  public void setName(Name name) {
-    this.name = name;
+  public void setForenames(String forenames) {
+    this.forenames = forenames;
   }
 
-  public Child1 birthplace(String birthplace) {
-    this.birthplace = birthplace;
+  public Child1 originalForenames(String originalForenames) {
+    this.originalForenames = originalForenames;
     return this;
   }
 
   /**
-   * The birthplace of the person
-   * @return birthplace
+   * The forenames originally given to the child before they were changed
+   * @return originalForenames
   */
-  @ApiModelProperty(example = "Kensington", value = "The birthplace of the person")
 
-
-  public String getBirthplace() {
-    return birthplace;
+  @Schema(name = "originalForenames", example = "John Narcissus Ouroboros", description = "The forenames originally given to the child before they were changed", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("originalForenames")
+  public String getOriginalForenames() {
+    return originalForenames;
   }
 
-  public void setBirthplace(String birthplace) {
-    this.birthplace = birthplace;
+  public void setOriginalForenames(String originalForenames) {
+    this.originalForenames = originalForenames;
+  }
+
+  public Child1 surname(String surname) {
+    this.surname = surname;
+    return this;
+  }
+
+  /**
+   * Surname of the child
+   * @return surname
+  */
+  @NotNull
+  @Schema(name = "surname", example = "SMITH", description = "Surname of the child", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("surname")
+  public String getSurname() {
+    return surname;
+  }
+
+  public void setSurname(String surname) {
+    this.surname = surname;
   }
 
   public Child1 dateOfBirth(LocalDate dateOfBirth) {
@@ -117,13 +156,12 @@ public class Child1   {
   }
 
   /**
-   * Date of birth of the person
+   * Date of birth of the child
    * @return dateOfBirth
   */
-  @ApiModelProperty(example = "Mon Aug 08 01:00:00 BST 2011", value = "Date of birth of the person")
-
-  @Valid
-
+  @NotNull @Valid
+  @Schema(name = "dateOfBirth", example = "Mon Aug 08 01:00:00 BST 2011", description = "Date of birth of the child", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("dateOfBirth")
   public LocalDate getDateOfBirth() {
     return dateOfBirth;
   }
@@ -138,12 +176,12 @@ public class Child1   {
   }
 
   /**
-   * Sex of the person
+   * Sex of the child
    * @return sex
   */
-  @ApiModelProperty(example = "Indeterminate", value = "Sex of the person")
-
-
+  @NotNull
+  @Schema(name = "sex", example = "Indeterminate", description = "Sex of the child", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("sex")
   public SexEnum getSex() {
     return sex;
   }
@@ -152,30 +190,28 @@ public class Child1   {
     this.sex = sex;
   }
 
-  public Child1 originalName(OriginalName1 originalName) {
-    this.originalName = originalName;
+  public Child1 birthplace(String birthplace) {
+    this.birthplace = birthplace;
     return this;
   }
 
   /**
-   * Get originalName
-   * @return originalName
+   * The birthplace of the child
+   * @return birthplace
   */
-  @ApiModelProperty(value = "")
 
-  @Valid
-
-  public OriginalName1 getOriginalName() {
-    return originalName;
+  @Schema(name = "birthplace", example = "Kensington", description = "The birthplace of the child", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("birthplace")
+  public String getBirthplace() {
+    return birthplace;
   }
 
-  public void setOriginalName(OriginalName1 originalName) {
-    this.originalName = originalName;
+  public void setBirthplace(String birthplace) {
+    this.birthplace = birthplace;
   }
-
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -183,28 +219,29 @@ public class Child1   {
       return false;
     }
     Child1 child1 = (Child1) o;
-    return Objects.equals(this.name, child1.name) &&
-        Objects.equals(this.birthplace, child1.birthplace) &&
+    return Objects.equals(this.forenames, child1.forenames) &&
+        Objects.equals(this.originalForenames, child1.originalForenames) &&
+        Objects.equals(this.surname, child1.surname) &&
         Objects.equals(this.dateOfBirth, child1.dateOfBirth) &&
         Objects.equals(this.sex, child1.sex) &&
-        Objects.equals(this.originalName, child1.originalName);
+        Objects.equals(this.birthplace, child1.birthplace);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, birthplace, dateOfBirth, sex, originalName);
+    return Objects.hash(forenames, originalForenames, surname, dateOfBirth, sex, birthplace);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Child1 {\n");
-
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    birthplace: ").append(toIndentedString(birthplace)).append("\n");
+    sb.append("    forenames: ").append(toIndentedString(forenames)).append("\n");
+    sb.append("    originalForenames: ").append(toIndentedString(originalForenames)).append("\n");
+    sb.append("    surname: ").append(toIndentedString(surname)).append("\n");
     sb.append("    dateOfBirth: ").append(toIndentedString(dateOfBirth)).append("\n");
     sb.append("    sex: ").append(toIndentedString(sex)).append("\n");
-    sb.append("    originalName: ").append(toIndentedString(originalName)).append("\n");
+    sb.append("    birthplace: ").append(toIndentedString(birthplace)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -213,7 +250,7 @@ public class Child1   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }
