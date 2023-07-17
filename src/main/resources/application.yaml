@@ -5,8 +5,10 @@ lev:
   bearertoken:
     username: ${LEV_USERNAME:}
     password: ${LEV_PASSWORD:}
-    
+
 spring:
+  main:
+    allow-bean-definition-overriding: true
   security:
     oauth2:
       client:
@@ -19,3 +21,7 @@ spring:
           homeoffice:
             authorization-uri:  ${LEV_DEATH_URL:https://api.lev.homeoffice.gov.uk}
             token-uri:  ${LEV_ACCESS_TOKEN_URI}
+  cloud:
+    mvc:
+      token-relay:
+        enabled: false

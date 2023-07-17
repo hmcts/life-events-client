@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.github.hmcts.lifeevents.client.config.ServiceConfiguration
