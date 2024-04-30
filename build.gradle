@@ -14,11 +14,7 @@ def buildNumber = System.getenv("RELEASE_VERSION")?.replace("refs/tags/", "") ?:
 group = 'com.github.hmcts'
 version buildNumber
 description = 'Client for HMPO Life Events service'
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
-}
+sourceCompatibility = 11
 
 //checkstyle {
 //    maxWarnings = 0
