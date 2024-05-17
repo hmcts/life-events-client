@@ -63,8 +63,12 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProvider
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProviderBuilder;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.endpoint.DefaultClientCredentialsTokenResponseClient;
+import org.springframework.security.oauth2.client.endpoint.DefaultPasswordTokenResponseClient;
+import org.springframework.security.oauth2.client.endpoint.DefaultRefreshTokenTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2ClientCredentialsGrantRequest;
+import org.springframework.security.oauth2.client.endpoint.OAuth2PasswordGrantRequest;
+import org.springframework.security.oauth2.client.endpoint.OAuth2RefreshTokenGrantRequest;
 import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorHandler;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
@@ -100,8 +104,12 @@ public class ClientConfiguration {
             .build();
     logger.info("authorizedClientManager() username: " + username);
     OAuth2AuthorizedClientProvider authorizedClientProvider = OAuth2AuthorizedClientProviderBuilder.builder()
-        .password()
-        .refreshToken()
+        .password(passwords ->
+                passwords.accessTokenResponseClient(
+                        createPasswordTokenResponseClient(restTemplate)))
+        .refreshToken(refreshToken ->
+                refreshToken.accessTokenResponseClient(
+                        createRefreshTokenResponseClient(restTemplate)))
         .clientCredentials(clientCredentials ->
             clientCredentials.accessTokenResponseClient(
                 createClientCredentialsTokenResponseClient(restTemplate)))
@@ -151,6 +159,22 @@ public class ClientConfiguration {
             new DefaultClientCredentialsTokenResponseClient();
     clientCredentialsTokenResponseClient.setRestOperations(restTemplate);
     return clientCredentialsTokenResponseClient;
+  }
+
+  private static OAuth2AccessTokenResponseClient<OAuth2PasswordGrantRequest> createPasswordTokenResponseClient(
+          RestTemplate restTemplate) {
+    DefaultPasswordTokenResponseClient passwordTokenResponseClient =
+            new DefaultPasswordTokenResponseClient();
+    passwordTokenResponseClient.setRestOperations(restTemplate);
+    return passwordTokenResponseClient;
+  }
+
+  private static OAuth2AccessTokenResponseClient<OAuth2RefreshTokenGrantRequest> createRefreshTokenResponseClient(
+          RestTemplate restTemplate) {
+    DefaultRefreshTokenTokenResponseClient refreshTokenResponseClient =
+            new DefaultRefreshTokenTokenResponseClient();
+    refreshTokenResponseClient.setRestOperations(restTemplate);
+    return refreshTokenResponseClient;
   }
 
   private Function<OAuth2AuthorizeRequest, Map<String, Object>> contextAttributesMapper(final String username, final String password) {
