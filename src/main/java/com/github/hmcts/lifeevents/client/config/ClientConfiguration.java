@@ -110,9 +110,6 @@ public class ClientConfiguration {
         .refreshToken(refreshToken ->
                 refreshToken.accessTokenResponseClient(
                         createRefreshTokenResponseClient(restTemplate)))
-        .clientCredentials(clientCredentials ->
-            clientCredentials.accessTokenResponseClient(
-                createClientCredentialsTokenResponseClient(restTemplate)))
         .build();
 
     AuthorizedClientServiceOAuth2AuthorizedClientManager authorizedClientManager =
@@ -151,14 +148,6 @@ public class ClientConfiguration {
         }
       };
     }
-  }
-
-  private static OAuth2AccessTokenResponseClient<OAuth2ClientCredentialsGrantRequest> createClientCredentialsTokenResponseClient(
-          RestTemplate restTemplate) {
-    DefaultClientCredentialsTokenResponseClient clientCredentialsTokenResponseClient =
-            new DefaultClientCredentialsTokenResponseClient();
-    clientCredentialsTokenResponseClient.setRestOperations(restTemplate);
-    return clientCredentialsTokenResponseClient;
   }
 
   private static OAuth2AccessTokenResponseClient<OAuth2PasswordGrantRequest> createPasswordTokenResponseClient(
