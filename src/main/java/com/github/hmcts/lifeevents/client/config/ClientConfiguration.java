@@ -28,6 +28,7 @@ import javax.net.ssl.SSLSocketFactory;
 
 import feign.Client;
 import feign.RequestInterceptor;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
@@ -35,6 +36,7 @@ import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -100,9 +102,9 @@ public class ClientConfiguration {
     OAuth2AuthorizedClientProvider authorizedClientProvider = OAuth2AuthorizedClientProviderBuilder.builder()
         .password()
         .refreshToken()
-            .clientCredentials(clientCredentials ->
-                    clientCredentials.accessTokenResponseClient(
-                            createClientCredentialsTokenResponseClient(restTemplate)))
+        .clientCredentials(clientCredentials ->
+            clientCredentials.accessTokenResponseClient(
+                createClientCredentialsTokenResponseClient(restTemplate)))
         .build();
 
     AuthorizedClientServiceOAuth2AuthorizedClientManager authorizedClientManager =
@@ -118,25 +120,29 @@ public class ClientConfiguration {
           @Value("${lev.ssl.publicCertificate}") String publicCertificate,
           @Value("${lev.ssl.privateKey}") String privateKey
   ) {
-    return () -> {
-      try {
-        SSLContext sslContext = getSSLContext(publicCertificate, privateKey);
-        final SSLConnectionSocketFactory sslConnectionSocketFactory =
-                new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
-        final Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
-                .register("http", PlainConnectionSocketFactory.getSocketFactory())
-                .register("https", sslConnectionSocketFactory)
-                .build();
-        final BasicHttpClientConnectionManager connectionManager =
-                new BasicHttpClientConnectionManager(socketFactoryRegistry);
-        final CloseableHttpClient httpClient = HttpClients.custom()
-                .setConnectionManager(connectionManager)
-                .build();
-        return new HttpComponentsClientHttpRequestFactory(httpClient);
-      } catch (Exception e) {
-        throw new RuntimeException(e);
-      }
-    };
+    if (publicCertificate == null || privateKey == null) {
+      return () -> new HttpComponentsClientHttpRequestFactory(getHttpClient());
+    } else {
+      return () -> {
+        try {
+          SSLContext sslContext = getSSLContext(publicCertificate, privateKey);
+          final SSLConnectionSocketFactory sslConnectionSocketFactory =
+                  new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
+          final Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
+                  .register("http", PlainConnectionSocketFactory.getSocketFactory())
+                  .register("https", sslConnectionSocketFactory)
+                  .build();
+          final BasicHttpClientConnectionManager connectionManager =
+                  new BasicHttpClientConnectionManager(socketFactoryRegistry);
+          final CloseableHttpClient httpClient = HttpClients.custom()
+                  .setConnectionManager(connectionManager)
+                  .build();
+          return new HttpComponentsClientHttpRequestFactory(httpClient);
+        } catch (Exception e) {
+          throw new RuntimeException(e);
+        }
+      };
+    }
   }
 
   private static OAuth2AccessTokenResponseClient<OAuth2ClientCredentialsGrantRequest> createClientCredentialsTokenResponseClient(
@@ -227,5 +233,21 @@ public class ClientConfiguration {
 
     sslContext.init(keyManagers, null, null);
     return sslContext;
+  }
+
+  private CloseableHttpClient getHttpClient() {
+    int timeout = 10000;
+    RequestConfig config = RequestConfig.custom()
+            .setConnectTimeout(timeout)
+            .setConnectionRequestTimeout(timeout)
+            .setSocketTimeout(timeout)
+            .build();
+
+    return HttpClientBuilder
+            .create()
+            .useSystemProperties()
+            .disableRedirectHandling()
+            .setDefaultRequestConfig(config)
+            .build();
   }
 }
