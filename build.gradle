@@ -143,12 +143,14 @@ publishing {
 }
 
 ext {
-    set('springCloudVersion', "2021.0.4")
+    set('springCloudVersion', "2021.0.9")
 }
 
 dependencies {
     implementation group: 'io.swagger', name: 'swagger-annotations', version: '1.5.18'
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign'
     implementation group: 'com.heroku.sdk', name: 'env-keystore', version: '1.1.6'
@@ -158,6 +160,7 @@ dependencies {
     implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.14.3'
     implementation group: 'org.openapitools', name: 'jackson-databind-nullable', version: '0.1.0'
     implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.0.16.Final'
+    implementation group: 'org.apache.httpcomponents', name: 'httpclient'
 
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.7.1'
     testImplementation group: 'com.github.tomakehurst', name: 'wiremock', version: '2.27.2'
