@@ -28,6 +28,7 @@ import javax.net.ssl.SSLSocketFactory;
 
 import feign.Client;
 import feign.RequestInterceptor;
+import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
@@ -99,6 +100,7 @@ public class ClientConfiguration {
                     new FormHttpMessageConverter(),
                     new OAuth2AccessTokenResponseHttpMessageConverter()))
             .errorHandler(new OAuth2ErrorResponseErrorHandler())
+            .additionalCustomizers()
             .build();
     logger.info("authorizedClientManager() username: " + username);
     OAuth2AuthorizedClientProvider authorizedClientProvider = OAuth2AuthorizedClientProviderBuilder.builder()
@@ -139,6 +141,7 @@ public class ClientConfiguration {
                   new BasicHttpClientConnectionManager(socketFactoryRegistry);
           final CloseableHttpClient httpClient = HttpClients.custom()
                   .setConnectionManager(connectionManager)
+                  .setDefaultRequestConfig(getRequestConfig())
                   .build();
           return new HttpComponentsClientHttpRequestFactory(httpClient);
         } catch (Exception e) {
@@ -247,18 +250,21 @@ public class ClientConfiguration {
   }
 
   private CloseableHttpClient getHttpClient() {
-    int timeout = 10000;
-    RequestConfig config = RequestConfig.custom()
-            .setConnectTimeout(timeout)
-            .setConnectionRequestTimeout(timeout)
-            .setSocketTimeout(timeout)
-            .build();
-
     return HttpClientBuilder
             .create()
             .useSystemProperties()
             .disableRedirectHandling()
-            .setDefaultRequestConfig(config)
+            .setDefaultRequestConfig(getRequestConfig())
+            .build();
+  }
+
+  private RequestConfig getRequestConfig() {
+    int timeout = 10000;
+    return RequestConfig.custom()
+            .setConnectTimeout(timeout)
+            .setConnectionRequestTimeout(timeout)
+            .setSocketTimeout(timeout)
+            .setCookieSpec(CookieSpecs.STANDARD)
             .build();
   }
 }
