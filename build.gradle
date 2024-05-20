@@ -1,12 +1,12 @@
 plugins {
 //    id 'checkstyle'
     id 'jacoco'
-    id 'io.spring.dependency-management' version '1.1.0'
-    id 'org.springframework.boot' version '3.1.1'
-    id 'org.owasp.dependencycheck' version '6.1.1'
+    id 'io.spring.dependency-management' version '1.1.5'
+    id 'org.springframework.boot' version '3.2.5'
+    id 'org.owasp.dependencycheck' version '9.2.0'
     id 'java-library'
     id 'maven-publish'
-    id 'com.github.ben-manes.versions' version '0.46.0'
+    id 'com.github.ben-manes.versions' version '0.51.0'
 }
 
 def buildNumber = System.getenv("RELEASE_VERSION")?.replace("refs/tags/", "") ?: "DEV-SNAPSHOT"
@@ -152,7 +152,7 @@ publishing {
 }
 
 ext {
-    set('springCloudVersion', "2022.0.3")
+    set('springCloudVersion', "2023.0.1")
     set('jakarta-servlet.version', '5.0.0')
 }
 
