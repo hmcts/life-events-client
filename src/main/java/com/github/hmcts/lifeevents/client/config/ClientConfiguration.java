@@ -64,10 +64,8 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProvider
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProviderBuilder;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.endpoint.DefaultPasswordTokenResponseClient;
-import org.springframework.security.oauth2.client.endpoint.DefaultRefreshTokenTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2PasswordGrantRequest;
-import org.springframework.security.oauth2.client.endpoint.OAuth2RefreshTokenGrantRequest;
 import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorHandler;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
@@ -100,16 +98,12 @@ public class ClientConfiguration {
                     new FormHttpMessageConverter(),
                     new OAuth2AccessTokenResponseHttpMessageConverter()))
             .errorHandler(new OAuth2ErrorResponseErrorHandler())
-            .additionalCustomizers()
             .build();
     logger.info("authorizedClientManager() username: " + username);
     OAuth2AuthorizedClientProvider authorizedClientProvider = OAuth2AuthorizedClientProviderBuilder.builder()
         .password(passwords ->
                 passwords.accessTokenResponseClient(
                         createPasswordTokenResponseClient(restTemplate)))
-        .refreshToken(refreshToken ->
-                refreshToken.accessTokenResponseClient(
-                        createRefreshTokenResponseClient(restTemplate)))
         .build();
 
     AuthorizedClientServiceOAuth2AuthorizedClientManager authorizedClientManager =
@@ -126,8 +120,10 @@ public class ClientConfiguration {
           @Value("${lev.ssl.privateKey}") String privateKey
   ) {
     if (publicCertificate == null || privateKey == null) {
+      logger.info("LEV Certificate or private key not set");
       return () -> new HttpComponentsClientHttpRequestFactory(getHttpClient());
     } else {
+      logger.info("LEV defaultClientHttpRequestFactory with Certificate and private key");
       return () -> {
         try {
           SSLContext sslContext = getSSLContext(publicCertificate, privateKey);
@@ -157,14 +153,6 @@ public class ClientConfiguration {
             new DefaultPasswordTokenResponseClient();
     passwordTokenResponseClient.setRestOperations(restTemplate);
     return passwordTokenResponseClient;
-  }
-
-  private static OAuth2AccessTokenResponseClient<OAuth2RefreshTokenGrantRequest> createRefreshTokenResponseClient(
-          RestTemplate restTemplate) {
-    DefaultRefreshTokenTokenResponseClient refreshTokenResponseClient =
-            new DefaultRefreshTokenTokenResponseClient();
-    refreshTokenResponseClient.setRestOperations(restTemplate);
-    return refreshTokenResponseClient;
   }
 
   private Function<OAuth2AuthorizeRequest, Map<String, Object>> contextAttributesMapper(final String username, final String password) {
