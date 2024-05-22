@@ -170,8 +170,10 @@ public class ClientConfiguration {
     ClientRegistration clientRegistration = clientRegistrationRepository.findByRegistrationId("homeoffice");
     OAuthClientCredentialsFeignManager clientCredentialsFeignManager =
         new OAuthClientCredentialsFeignManager(authorizedClientManager, clientRegistration);
+    String accessToken = clientCredentialsFeignManager.getAccessToken();
+    removeAuthorizedClient("homeoffice", clientRegistration.getClientId());
     return requestTemplate -> {
-      requestTemplate.header("Authorization", "Bearer " + clientCredentialsFeignManager.getAccessToken());
+      requestTemplate.header("Authorization", "Bearer " + accessToken);
     };
   }
 
@@ -253,5 +255,9 @@ public class ClientConfiguration {
             .setSocketTimeout(timeout)
             .setCookieSpec(CookieSpecs.STANDARD)
             .build();
+  }
+
+  private void removeAuthorizedClient(String registrationId, String principalName) {
+    this.oAuth2AuthorizedClientService.removeAuthorizedClient(registrationId, principalName);
   }
 }

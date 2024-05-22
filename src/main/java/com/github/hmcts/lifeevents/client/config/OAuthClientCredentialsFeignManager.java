@@ -77,9 +77,10 @@ public class OAuthClientCredentialsFeignManager {
             logger.info("OAuthClientCredentialsFeignManager.getAccessToken() clientId: " + clientRegistration.getClientId());
             OAuth2AuthorizedClient client = null;
             try {
-                logger.info("Token Request LEV: " + manager.toString());
+                logger.info("Authorizing LEV OAuth2 request");
                 client = manager.authorize(oAuth2AuthorizeRequest);
             } catch (ClientAuthorizationException cae) {
+                logger.info("ClientAuthorizationException message:" + cae.getMessage());
                 if("Token is not active".equals(cae.getError().getDescription())){
                     client = manager.authorize(oAuth2AuthorizeRequest);
                 }
@@ -87,8 +88,6 @@ public class OAuthClientCredentialsFeignManager {
             if (isNull(client)) {
                 throw new IllegalStateException("Password flow on " + clientRegistration.getRegistrationId() + " failed, client is null");
             }
-            logger.info("access Token: " + client.getAccessToken().getTokenValue());
-            logger.info("refresh Token: " + client.getRefreshToken().getTokenValue());
             return client.getAccessToken().getTokenValue();
         } catch (Exception exp) {
             logger.error("client credentials error " + exp.getMessage(), exp);
