@@ -114,7 +114,6 @@ public class ClientConfiguration {
   }
 
   @Bean("client-http-request-factory")
-  @ConditionalOnProperty(name = "lev.ssl.publicCertificate")
   Supplier<ClientHttpRequestFactory> defaultClientHttpRequestFactory(
           @Value("${lev.ssl.publicCertificate}") String publicCertificate,
           @Value("${lev.ssl.privateKey}") String privateKey

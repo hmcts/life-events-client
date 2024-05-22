@@ -29,7 +29,7 @@ public class OAuthClientCredentialsFeignManager {
     }
 
     private Authentication createPrincipal() {
-        
+
         return new Authentication() {
             @Override
             public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -77,6 +77,7 @@ public class OAuthClientCredentialsFeignManager {
             logger.info("OAuthClientCredentialsFeignManager.getAccessToken() clientId: " + clientRegistration.getClientId());
             OAuth2AuthorizedClient client = null;
             try {
+                logger.info("Token Request LEV: " + manager.toString());
                 client = manager.authorize(oAuth2AuthorizeRequest);
             } catch (ClientAuthorizationException cae) {
                 if("Token is not active".equals(cae.getError().getDescription())){
@@ -86,6 +87,7 @@ public class OAuthClientCredentialsFeignManager {
             if (isNull(client)) {
                 throw new IllegalStateException("Password flow on " + clientRegistration.getRegistrationId() + " failed, client is null");
             }
+            logger.info("Token Response: " + client.getAccessToken() + " refreshToken: " + client.getRefreshToken());
             return client.getAccessToken().getTokenValue();
         } catch (Exception exp) {
             logger.error("client credentials error " + exp.getMessage(), exp);
