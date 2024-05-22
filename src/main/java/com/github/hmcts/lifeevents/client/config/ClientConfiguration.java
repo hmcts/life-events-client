@@ -59,6 +59,7 @@ import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.security.oauth2.client.AuthorizedClientServiceOAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.OAuth2AuthorizationContext;
 import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProvider;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProviderBuilder;
@@ -92,7 +93,7 @@ public class ClientConfiguration {
                                                                 RestTemplateBuilder restTemplateBuilder,
                                                                 @Qualifier("client-http-request-factory") Supplier<ClientHttpRequestFactory> clientHttpRequestFactory) {
 
-    RestTemplate restTemplate = restTemplateBuilder
+    Supplier<RestTemplate> restTemplateSupplier = () -> restTemplateBuilder
             .requestFactory(clientHttpRequestFactory)
             .messageConverters(Arrays.asList(
                     new FormHttpMessageConverter(),
@@ -101,10 +102,9 @@ public class ClientConfiguration {
             .build();
     logger.info("authorizedClientManager() username: " + username);
     OAuth2AuthorizedClientProvider authorizedClientProvider = OAuth2AuthorizedClientProviderBuilder.builder()
-        .password(passwords ->
-                passwords.accessTokenResponseClient(
-                        createPasswordTokenResponseClient(restTemplate)))
-        .refreshToken()
+        .password(passwordGrantRequestEntity ->
+                passwordGrantRequestEntity.accessTokenResponseClient(
+                        createPasswordTokenResponseClient(restTemplateSupplier.get())))
         .build();
 
     AuthorizedClientServiceOAuth2AuthorizedClientManager authorizedClientManager =
@@ -169,6 +169,11 @@ public class ClientConfiguration {
   public RequestInterceptor requestInterceptor( OAuth2AuthorizedClientManager authorizedClientManager) {
     logger.info("requestInterceptor()");
     ClientRegistration clientRegistration = clientRegistrationRepository.findByRegistrationId("homeoffice");
+    OAuth2AuthorizedClient authorizedClient = oAuth2AuthorizedClientService.loadAuthorizedClient(clientRegistration.getRegistrationId(), clientRegistration.getClientId());
+    if (authorizedClient != null) {
+      logger.info("removeAuthorizedClient");
+      oAuth2AuthorizedClientService.removeAuthorizedClient(clientRegistration.getRegistrationId(), clientRegistration.getClientId());
+    }
     return requestTemplate -> {
       OAuthClientCredentialsFeignManager clientCredentialsFeignManager =
               new OAuthClientCredentialsFeignManager(authorizedClientManager, clientRegistration);
