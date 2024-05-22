@@ -168,12 +168,10 @@ public class ClientConfiguration {
   public RequestInterceptor requestInterceptor( OAuth2AuthorizedClientManager authorizedClientManager) {
     logger.info("requestInterceptor()");
     ClientRegistration clientRegistration = clientRegistrationRepository.findByRegistrationId("homeoffice");
-    OAuthClientCredentialsFeignManager clientCredentialsFeignManager =
-        new OAuthClientCredentialsFeignManager(authorizedClientManager, clientRegistration);
-    String accessToken = clientCredentialsFeignManager.getAccessToken();
-    removeAuthorizedClient("homeoffice", clientRegistration.getClientId());
     return requestTemplate -> {
-      requestTemplate.header("Authorization", "Bearer " + accessToken);
+      OAuthClientCredentialsFeignManager clientCredentialsFeignManager =
+              new OAuthClientCredentialsFeignManager(authorizedClientManager, clientRegistration);
+      requestTemplate.header("Authorization", "Bearer " + clientCredentialsFeignManager.getAccessToken());
     };
   }
 
@@ -255,9 +253,5 @@ public class ClientConfiguration {
             .setSocketTimeout(timeout)
             .setCookieSpec(CookieSpecs.STANDARD)
             .build();
-  }
-
-  private void removeAuthorizedClient(String registrationId, String principalName) {
-    this.oAuth2AuthorizedClientService.removeAuthorizedClient(registrationId, principalName);
   }
 }
