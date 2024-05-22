@@ -80,7 +80,8 @@ public class OAuthClientCredentialsFeignManager {
                 logger.info("Authorizing LEV OAuth2 request");
                 client = manager.authorize(oAuth2AuthorizeRequest);
             } catch (ClientAuthorizationException cae) {
-                logger.info("ClientAuthorizationException message:" + cae.getMessage());
+                logger.info("ClientAuthorizationException message: " + cae.getMessage());
+                logger.info("ClientAuthorizationException description: " + cae.getError().getDescription());
                 if("Token is not active".equals(cae.getError().getDescription())){
                     client = manager.authorize(oAuth2AuthorizeRequest);
                 }
