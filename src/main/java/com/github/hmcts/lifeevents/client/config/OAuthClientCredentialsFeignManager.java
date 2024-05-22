@@ -87,7 +87,8 @@ public class OAuthClientCredentialsFeignManager {
             if (isNull(client)) {
                 throw new IllegalStateException("Password flow on " + clientRegistration.getRegistrationId() + " failed, client is null");
             }
-            logger.info("Token Response: " + client.getAccessToken() + " refreshToken: " + client.getRefreshToken());
+            logger.info("access Token: " + client.getAccessToken().getTokenValue());
+            logger.info("refresh Token: " + client.getRefreshToken().getTokenValue());
             return client.getAccessToken().getTokenValue();
         } catch (Exception exp) {
             logger.error("client credentials error " + exp.getMessage(), exp);
