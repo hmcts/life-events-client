@@ -79,10 +79,13 @@ public class OAuthClientCredentialsFeignManager {
             try {
                 logger.info("Authorizing LEV OAuth2 request");
                 client = manager.authorize(oAuth2AuthorizeRequest);
+                if (client != null && client.getRefreshToken() != null) {
+                    logger.info("Refresh token is available");
+                }
             } catch (ClientAuthorizationException cae) {
                 logger.info("ClientAuthorizationException message: " + cae.getMessage());
                 logger.info("ClientAuthorizationException description: " + cae.getError().getDescription());
-                if("Token is not active".equals(cae.getError().getDescription())){
+                if("No refresh token".equals(cae.getError().getDescription())){
                     client = manager.authorize(oAuth2AuthorizeRequest);
                 }
             }

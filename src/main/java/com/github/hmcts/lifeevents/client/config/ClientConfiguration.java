@@ -107,9 +107,9 @@ public class ClientConfiguration {
         .password(passwordGrantRequestEntity ->
                 passwordGrantRequestEntity.accessTokenResponseClient(
                         createPasswordTokenResponseClient(restTemplateSupplier.get())))
-            .refreshToken(refreshToken ->
-                    refreshToken.accessTokenResponseClient(
-                            createRefreshTokenResponseClient(restTemplateSupplier.get())))
+        .refreshToken(refreshToken ->
+                refreshToken.accessTokenResponseClient(
+                        createRefreshTokenResponseClient(restTemplateSupplier.get())))
         .build();
 
     AuthorizedClientServiceOAuth2AuthorizedClientManager authorizedClientManager =
