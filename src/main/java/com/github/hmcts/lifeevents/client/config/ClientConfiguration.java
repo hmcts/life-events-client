@@ -191,7 +191,10 @@ public class ClientConfiguration {
 
   @Bean
   @ConditionalOnBean(value=OAuth2AuthorizedClientManager.class)
-  public RequestInterceptor requestInterceptor( OAuth2AuthorizedClientManager authorizedClientManager, @Qualifier("client-http-request-factory") Supplier<ClientHttpRequestFactory> clientHttpRequestFactory) {
+  public RequestInterceptor requestInterceptor( OAuth2AuthorizedClientManager authorizedClientManager, @Qualifier("client-http-request-factory") Supplier<ClientHttpRequestFactory> clientHttpRequestFactory,
+                                                @Value("${lev.bearertoken.username}") String username,
+                                                @Value("${lev.bearertoken.password}") String password
+  ) {
     logger.info("requestInterceptor()");
     ClientRegistration clientRegistration = clientRegistrationRepository.findByRegistrationId("homeoffice");
     OAuth2AuthorizedClient authorizedClient = oAuth2AuthorizedClientService.loadAuthorizedClient(clientRegistration.getRegistrationId(), clientRegistration.getClientId());
@@ -202,7 +205,7 @@ public class ClientConfiguration {
     RestTemplateConfiguration restTemplateConfiguration = new RestTemplateConfiguration(clientHttpRequestFactory);
     return requestTemplate -> {
       OAuthClientCredentialsFeignManager clientCredentialsFeignManager =
-              new OAuthClientCredentialsFeignManager(authorizedClientManager, clientRegistration, oAuth2AuthorizedClientService, restTemplateConfiguration);
+              new OAuthClientCredentialsFeignManager(authorizedClientManager, clientRegistration, oAuth2AuthorizedClientService, restTemplateConfiguration, username, password);
       requestTemplate.header("Authorization", "Bearer " + clientCredentialsFeignManager.getAccessToken());
     };
   }

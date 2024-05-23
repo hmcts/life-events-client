@@ -5,7 +5,6 @@ import java.util.Collections;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -36,24 +35,22 @@ public class OAuthClientCredentialsFeignManager {
     private final ClientRegistration clientRegistration;
     private final OAuth2AuthorizedClientService authorizedClientService;
     private final RestTemplateConfiguration restTemplateConfiguration;
-
-
-    @Value("${lev.bearertoken.username}")
-    private String username;
-
-    @Value("${lev.bearertoken.password}")
-    private String password;
+    private final String username;
+    private final String password;
 
 
     public OAuthClientCredentialsFeignManager(OAuth2AuthorizedClientManager manager,
                                               ClientRegistration clientRegistration,
                                               OAuth2AuthorizedClientService oAuth2AuthorizedClientService,
-                                              RestTemplateConfiguration restTemplateConfiguration) {
+                                              RestTemplateConfiguration restTemplateConfiguration,
+                                              String username, String password) {
         this.manager = manager;
         this.clientRegistration = clientRegistration;
         this.restTemplateConfiguration = restTemplateConfiguration;
         this.principal = createPrincipal();
         this.authorizedClientService = oAuth2AuthorizedClientService;
+        this.username = username;
+        this.password = password;
     }
 
     private Authentication createPrincipal() {
