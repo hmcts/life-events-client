@@ -5,6 +5,11 @@ import java.util.Collections;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.client.ClientAuthorizationException;
@@ -13,6 +18,12 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.core.endpoint.OAuth2AccessTokenResponse;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 import static java.util.Objects.isNull;
 
@@ -23,10 +34,17 @@ public class OAuthClientCredentialsFeignManager {
     private final Authentication principal;
     private final ClientRegistration clientRegistration;
     private final OAuth2AuthorizedClientService authorizedClientService;
+    private final RestTemplateConfiguration restTemplateConfiguration;
 
-    public OAuthClientCredentialsFeignManager(OAuth2AuthorizedClientManager manager, ClientRegistration clientRegistration, OAuth2AuthorizedClientService oAuth2AuthorizedClientService) {
+
+
+    public OAuthClientCredentialsFeignManager(OAuth2AuthorizedClientManager manager,
+                                              ClientRegistration clientRegistration,
+                                              OAuth2AuthorizedClientService oAuth2AuthorizedClientService,
+                                              RestTemplateConfiguration restTemplateConfiguration) {
         this.manager = manager;
         this.clientRegistration = clientRegistration;
+        this.restTemplateConfiguration = restTemplateConfiguration;
         this.principal = createPrincipal();
         this.authorizedClientService = oAuth2AuthorizedClientService;
     }
@@ -78,6 +96,8 @@ public class OAuthClientCredentialsFeignManager {
                 .build();
             if (authorizedClientService.loadAuthorizedClient(clientRegistration.getRegistrationId(), clientRegistration.getClientId()) != null) {
                 logger.info("loadAuthorizedClient refresh token" + authorizedClientService.loadAuthorizedClient(clientRegistration.getRegistrationId(), clientRegistration.getClientId()).getRefreshToken().getTokenValue());
+                OAuth2AuthorizedClient authorizedClient = authorizedClientService.loadAuthorizedClient(clientRegistration.getRegistrationId(), clientRegistration.getClientId());
+                return refreshAccessToken(authorizedClient.getRefreshToken().getTokenValue(), clientRegistration).getAccessToken().getTokenValue();
             }
 
             logger.info("OAuthClientCredentialsFeignManager.getAccessToken() clientId: " + clientRegistration.getClientId());
@@ -103,5 +123,36 @@ public class OAuthClientCredentialsFeignManager {
             logger.error("client credentials error " + exp.getMessage(), exp);
         }
         return null;
+    }
+
+    public OAuth2AccessTokenResponse refreshAccessToken(String refreshToken,
+                                                        ClientRegistration clientRegistration
+    ) throws RestClientException {
+        RestTemplate restTemplate = restTemplateConfiguration.getRestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        map.add("grant_type", "refresh_token");
+        map.add("refresh_token", refreshToken);
+        map.add("client_id", clientRegistration.getClientId());
+        map.add("client_secret", clientRegistration.getClientSecret());
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+
+        ResponseEntity<OAuth2AccessTokenResponse> response = restTemplate.exchange(
+                clientRegistration.getProviderDetails().getTokenUri(),
+                HttpMethod.POST,
+                request,
+                OAuth2AccessTokenResponse.class
+        );
+
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            throw new HttpClientErrorException(response.getStatusCode(), "Failed to refresh token");
+        }
+        logger.info("refreshAccessToken() response body:" +response.getBody().toString());
+        logger.info("refreshAccessToken() response token:" +response.getBody().getAccessToken().getTokenValue());
+        return response.getBody();
     }
 }

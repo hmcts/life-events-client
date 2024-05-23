@@ -191,7 +191,7 @@ public class ClientConfiguration {
 
   @Bean
   @ConditionalOnBean(value=OAuth2AuthorizedClientManager.class)
-  public RequestInterceptor requestInterceptor( OAuth2AuthorizedClientManager authorizedClientManager) {
+  public RequestInterceptor requestInterceptor( OAuth2AuthorizedClientManager authorizedClientManager, @Qualifier("client-http-request-factory") Supplier<ClientHttpRequestFactory> clientHttpRequestFactory) {
     logger.info("requestInterceptor()");
     ClientRegistration clientRegistration = clientRegistrationRepository.findByRegistrationId("homeoffice");
     OAuth2AuthorizedClient authorizedClient = oAuth2AuthorizedClientService.loadAuthorizedClient(clientRegistration.getRegistrationId(), clientRegistration.getClientId());
@@ -199,9 +199,10 @@ public class ClientConfiguration {
       logger.info("removeAuthorizedClient");
       oAuth2AuthorizedClientService.removeAuthorizedClient(clientRegistration.getRegistrationId(), clientRegistration.getClientId());
     }
+    RestTemplateConfiguration restTemplateConfiguration = new RestTemplateConfiguration(clientHttpRequestFactory);
     return requestTemplate -> {
       OAuthClientCredentialsFeignManager clientCredentialsFeignManager =
-              new OAuthClientCredentialsFeignManager(authorizedClientManager, clientRegistration, oAuth2AuthorizedClientService);
+              new OAuthClientCredentialsFeignManager(authorizedClientManager, clientRegistration, oAuth2AuthorizedClientService, restTemplateConfiguration);
       requestTemplate.header("Authorization", "Bearer " + clientCredentialsFeignManager.getAccessToken());
     };
   }
@@ -230,7 +231,7 @@ public class ClientConfiguration {
     return getSSLContext(publicCertificate, privateKey).getSocketFactory();
   }
 
-  private SSLContext getSSLContext(String publicCertificate, String privateKey)
+  public SSLContext getSSLContext(String publicCertificate, String privateKey)
           throws NoSuchAlgorithmException, KeyStoreException,
           CertificateException, IOException, KeyManagementException, UnrecoverableKeyException
   {
