@@ -99,7 +99,6 @@ public class OAuthClientCredentialsFeignManager {
         try {
             if (authorizedClientService.loadAuthorizedClient(clientRegistration.getRegistrationId(), clientRegistration.getClientId()) != null) {
                 logger.info("loadAuthorizedClient refresh token" + authorizedClientService.loadAuthorizedClient(clientRegistration.getRegistrationId(), clientRegistration.getClientId()).getRefreshToken().getTokenValue());
-                OAuth2AuthorizedClient authorizedClient = authorizedClientService.loadAuthorizedClient(clientRegistration.getRegistrationId(), clientRegistration.getClientId());
                 return refreshAccessToken().getAccessToken().getTokenValue();
             }
             OAuth2AuthorizeRequest oAuth2AuthorizeRequest = OAuth2AuthorizeRequest
