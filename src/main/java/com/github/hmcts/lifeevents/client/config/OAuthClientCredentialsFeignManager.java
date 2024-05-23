@@ -5,6 +5,7 @@ import java.util.Collections;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -36,6 +37,12 @@ public class OAuthClientCredentialsFeignManager {
     private final OAuth2AuthorizedClientService authorizedClientService;
     private final RestTemplateConfiguration restTemplateConfiguration;
 
+
+    @Value("${lev.bearertoken.username}")
+    private String username;
+
+    @Value("${lev.bearertoken.password}")
+    private String password;
 
 
     public OAuthClientCredentialsFeignManager(OAuth2AuthorizedClientManager manager,
@@ -90,15 +97,15 @@ public class OAuthClientCredentialsFeignManager {
 
     public String getAccessToken() {
         try {
+            if (authorizedClientService.loadAuthorizedClient(clientRegistration.getRegistrationId(), clientRegistration.getClientId()) != null) {
+                logger.info("loadAuthorizedClient refresh token" + authorizedClientService.loadAuthorizedClient(clientRegistration.getRegistrationId(), clientRegistration.getClientId()).getRefreshToken().getTokenValue());
+                OAuth2AuthorizedClient authorizedClient = authorizedClientService.loadAuthorizedClient(clientRegistration.getRegistrationId(), clientRegistration.getClientId());
+                return refreshAccessToken().getAccessToken().getTokenValue();
+            }
             OAuth2AuthorizeRequest oAuth2AuthorizeRequest = OAuth2AuthorizeRequest
                 .withClientRegistrationId(clientRegistration.getRegistrationId())
                 .principal(principal)
                 .build();
-            if (authorizedClientService.loadAuthorizedClient(clientRegistration.getRegistrationId(), clientRegistration.getClientId()) != null) {
-                logger.info("loadAuthorizedClient refresh token" + authorizedClientService.loadAuthorizedClient(clientRegistration.getRegistrationId(), clientRegistration.getClientId()).getRefreshToken().getTokenValue());
-                OAuth2AuthorizedClient authorizedClient = authorizedClientService.loadAuthorizedClient(clientRegistration.getRegistrationId(), clientRegistration.getClientId());
-                return refreshAccessToken(authorizedClient.getRefreshToken().getTokenValue(), clientRegistration).getAccessToken().getTokenValue();
-            }
 
             logger.info("OAuthClientCredentialsFeignManager.getAccessToken() clientId: " + clientRegistration.getClientId());
             OAuth2AuthorizedClient client = null;
@@ -125,19 +132,18 @@ public class OAuthClientCredentialsFeignManager {
         return null;
     }
 
-    public OAuth2AccessTokenResponse refreshAccessToken(String refreshToken,
-                                                        ClientRegistration clientRegistration
-    ) throws RestClientException {
+    public OAuth2AccessTokenResponse refreshAccessToken() throws RestClientException {
         RestTemplate restTemplate = restTemplateConfiguration.getRestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.add("grant_type", "refresh_token");
-        map.add("refresh_token", refreshToken);
+        map.add("grant_type", "password");
         map.add("client_id", clientRegistration.getClientId());
         map.add("client_secret", clientRegistration.getClientSecret());
+        map.add("username", username);
+        map.add("password", password);
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 
@@ -147,12 +153,13 @@ public class OAuthClientCredentialsFeignManager {
                 request,
                 OAuth2AccessTokenResponse.class
         );
+        logger.info("refreshAccessToken() response body:" +response.getBody().toString());
+        logger.info("refreshAccessToken() response token:" +response.getBody().getAccessToken().getTokenValue());
 
         if (!response.getStatusCode().is2xxSuccessful()) {
             throw new HttpClientErrorException(response.getStatusCode(), "Failed to refresh token");
         }
-        logger.info("refreshAccessToken() response body:" +response.getBody().toString());
-        logger.info("refreshAccessToken() response token:" +response.getBody().getAccessToken().getTokenValue());
+
         return response.getBody();
     }
 }
