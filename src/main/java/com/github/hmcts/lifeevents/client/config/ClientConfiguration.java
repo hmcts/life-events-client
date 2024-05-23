@@ -89,7 +89,7 @@ public class ClientConfiguration {
   ) {
     if (publicCertificate == null || privateKey == null) {
       logger.info("LEV Certificate or private key not set");
-      return () -> new HttpComponentsClientHttpRequestFactory(getHttpClient());
+      throw new IllegalArgumentException("SSL Certificate or private key cannot be null.");
     } else {
       logger.info("LEV defaultClientHttpRequestFactory with Certificate and private key");
       return () -> {
@@ -110,7 +110,9 @@ public class ClientConfiguration {
           return new HttpComponentsClientHttpRequestFactory(httpClient);
         } catch (IOException | NoSuchAlgorithmException | KeyStoreException | CertificateException |
                  KeyManagementException | UnrecoverableKeyException e) {
-          throw new RuntimeException(e);
+          logger.error("Failed to set up HTTP client with SSL context: {}", e.getMessage(), e);
+          throw new IllegalStateException("Failed to create HTTP client: " + e.getMessage(), e);
+
         }
       };
     }
@@ -122,7 +124,7 @@ public class ClientConfiguration {
                                                 @Value("${lev.bearertoken.username}") String username,
                                                 @Value("${lev.bearertoken.password}") String password
   ) {
-    logger.info("requestInterceptor()");
+    logger.info("requestInterceptor username: {}", username);
     ClientRegistration clientRegistration = clientRegistrationRepository.findByRegistrationId("homeoffice");
     return requestTemplate -> {
       OAuthClientCredentialsFeignManager clientCredentialsFeignManager =

@@ -48,7 +48,7 @@ public class OAuthClientCredentialsFeignManager {
             map.add("client_secret", clientRegistration.getClientSecret());
             map.add("username", username);
             map.add("password", password);
-
+            logger.info("OAuthClientCredentialsFeignManager getAccessToken with grant_type: {}, client_id: {}", clientRegistration.getAuthorizationGrantType().getValue(), clientRegistration.getClientId());
             HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 
             ResponseEntity<OAuth2AccessTokenResponse> response = restTemplate.exchange(
@@ -63,7 +63,7 @@ public class OAuthClientCredentialsFeignManager {
             }
             return Objects.requireNonNull(response.getBody()).getAccessToken().getTokenValue();
         } catch (RestClientException exp) {
-            logger.error("client credentials error " + exp.getMessage(), exp);
+            logger.error("client credentials error {}", exp.getMessage(), exp);
         }
         return null;
     }
