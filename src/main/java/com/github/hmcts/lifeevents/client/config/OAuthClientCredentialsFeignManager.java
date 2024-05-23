@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.client.ClientAuthorizationException;
 import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 
 import static java.util.Objects.isNull;
@@ -21,15 +22,17 @@ public class OAuthClientCredentialsFeignManager {
     private final OAuth2AuthorizedClientManager manager;
     private final Authentication principal;
     private final ClientRegistration clientRegistration;
+    private final OAuth2AuthorizedClientService authorizedClientService;
 
-    public OAuthClientCredentialsFeignManager(OAuth2AuthorizedClientManager manager, ClientRegistration clientRegistration) {
+    public OAuthClientCredentialsFeignManager(OAuth2AuthorizedClientManager manager, ClientRegistration clientRegistration, OAuth2AuthorizedClientService oAuth2AuthorizedClientService) {
         this.manager = manager;
         this.clientRegistration = clientRegistration;
         this.principal = createPrincipal();
+        this.authorizedClientService = oAuth2AuthorizedClientService;
     }
 
     private Authentication createPrincipal() {
-        
+
         return new Authentication() {
             @Override
             public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -73,13 +76,22 @@ public class OAuthClientCredentialsFeignManager {
                 .withClientRegistrationId(clientRegistration.getRegistrationId())
                 .principal(principal)
                 .build();
+            if (authorizedClientService.loadAuthorizedClient(clientRegistration.getRegistrationId(), clientRegistration.getClientId()) != null) {
+                logger.info("loadAuthorizedClient refresh token" + authorizedClientService.loadAuthorizedClient(clientRegistration.getRegistrationId(), clientRegistration.getClientId()).getRefreshToken().getTokenValue());
+            }
 
             logger.info("OAuthClientCredentialsFeignManager.getAccessToken() clientId: " + clientRegistration.getClientId());
             OAuth2AuthorizedClient client = null;
             try {
+                logger.info("Authorizing LEV OAuth2 request");
                 client = manager.authorize(oAuth2AuthorizeRequest);
+                if (client != null && client.getRefreshToken() != null) {
+                    logger.info("OAuth2AuthorizedClient Refresh token: {}", client.getRefreshToken().getTokenValue());
+                }
             } catch (ClientAuthorizationException cae) {
-                if("Token is not active".equals(cae.getError().getDescription())){
+                logger.info("ClientAuthorizationException message: " + cae.getMessage());
+                logger.info("ClientAuthorizationException description: " + cae.getError().getDescription());
+                if("No refresh token".equals(cae.getError().getDescription())){
                     client = manager.authorize(oAuth2AuthorizeRequest);
                 }
             }
