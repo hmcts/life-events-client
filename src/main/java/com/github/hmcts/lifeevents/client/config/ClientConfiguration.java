@@ -55,7 +55,6 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.security.oauth2.client.AuthorizedClientServiceOAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.OAuth2AuthorizationContext;
 import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
@@ -69,10 +68,12 @@ import org.springframework.security.oauth2.client.endpoint.DefaultRefreshTokenTo
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2PasswordGrantRequest;
 import org.springframework.security.oauth2.client.endpoint.OAuth2RefreshTokenGrantRequest;
-import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorHandler;
+import org.springframework.security.oauth2.client.endpoint.OAuth2RefreshTokenGrantRequestEntityConverter;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.core.http.converter.OAuth2AccessTokenResponseHttpMessageConverter;
+import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 @EnableConfigurationProperties
@@ -97,10 +98,6 @@ public class ClientConfiguration {
 
     Supplier<RestTemplate> restTemplateSupplier = () -> restTemplateBuilder
             .requestFactory(clientHttpRequestFactory)
-            .messageConverters(Arrays.asList(
-                    new FormHttpMessageConverter(),
-                    new OAuth2AccessTokenResponseHttpMessageConverter()))
-            .errorHandler(new OAuth2ErrorResponseErrorHandler())
             .build();
     logger.info("authorizedClientManager() username: " + username);
     OAuth2AuthorizedClientProvider authorizedClientProvider = OAuth2AuthorizedClientProviderBuilder.builder()
@@ -165,6 +162,14 @@ public class ClientConfiguration {
     DefaultRefreshTokenTokenResponseClient refreshTokenResponseClient =
             new DefaultRefreshTokenTokenResponseClient();
     refreshTokenResponseClient.setRestOperations(restTemplate);
+    OAuth2RefreshTokenGrantRequestEntityConverter refreshTokenGrantRequestEntityConverter = new OAuth2RefreshTokenGrantRequestEntityConverter();
+    refreshTokenGrantRequestEntityConverter.addParametersConverter(authorizationGrantRequest -> {
+      MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+      parameters.add(OAuth2ParameterNames.REFRESH_TOKEN, authorizationGrantRequest.getRefreshToken().getTokenValue());
+        logger.info("OAuth2AccessTokenResponseClient Refresh token: {}", authorizationGrantRequest.getRefreshToken().getTokenValue());
+      return parameters;
+    });
+    refreshTokenResponseClient.setRequestEntityConverter(refreshTokenGrantRequestEntityConverter);
     return refreshTokenResponseClient;
   }
 
@@ -189,7 +194,7 @@ public class ClientConfiguration {
     }
     return requestTemplate -> {
       OAuthClientCredentialsFeignManager clientCredentialsFeignManager =
-              new OAuthClientCredentialsFeignManager(authorizedClientManager, clientRegistration);
+              new OAuthClientCredentialsFeignManager(authorizedClientManager, clientRegistration, oAuth2AuthorizedClientService);
       requestTemplate.header("Authorization", "Bearer " + clientCredentialsFeignManager.getAccessToken());
     };
   }
