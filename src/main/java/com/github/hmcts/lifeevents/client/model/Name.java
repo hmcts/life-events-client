@@ -9,7 +9,7 @@ import io.swagger.annotations.ApiModelProperty;
  * Name of the person
  */
 @ApiModel(description = "Name of the person")
-@javax.annotation.processing.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
 public class Name   {
   @JsonProperty("givenName")

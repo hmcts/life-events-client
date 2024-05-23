@@ -13,7 +13,7 @@ import javax.validation.constraints.*;
  * Status flags associated with this record
  */
 @ApiModel(description = "Status flags associated with this record")
-@javax.annotation.processing.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
 public class Status1   {
   @JsonProperty("blocked")

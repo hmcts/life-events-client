@@ -11,7 +11,7 @@ import javax.validation.constraints.*;
  * The mother of the child that was born
  */
 @ApiModel(description = "The mother of the child that was born")
-@javax.annotation.processing.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
 public class Mother1   {
   @JsonProperty("forenames")
