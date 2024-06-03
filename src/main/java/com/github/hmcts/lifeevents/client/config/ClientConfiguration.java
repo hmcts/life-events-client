@@ -16,6 +16,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 import javax.net.ssl.KeyManager;
@@ -34,9 +35,8 @@ import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
@@ -65,6 +65,18 @@ public class ClientConfiguration {
   private static final Logger logger = LoggerFactory.getLogger(ClientConfiguration.class);
 
   private final ClientRegistrationRepository clientRegistrationRepository;
+
+  @Value("${http.client.max.total}")
+  private int maxTotalHttpClient;
+
+  @Value("${http.client.seconds.idle.connection}")
+  private int maxSecondsIdleConnection;
+
+  @Value("${http.client.max.client_per_route}")
+  private int maxClientPerRoute;
+
+  @Value("${http.client.validate.after.inactivity}")
+  private int validateAfterInactivity;
 
   public ClientConfiguration(ClientRegistrationRepository clientRegistrationRepository) {
     this.clientRegistrationRepository = clientRegistrationRepository;
@@ -101,10 +113,14 @@ public class ClientConfiguration {
                   .register("http", PlainConnectionSocketFactory.getSocketFactory())
                   .register("https", sslConnectionSocketFactory)
                   .build();
-          final BasicHttpClientConnectionManager connectionManager =
-                  new BasicHttpClientConnectionManager(socketFactoryRegistry);
+          final PoolingHttpClientConnectionManager cm =
+                  new PoolingHttpClientConnectionManager(socketFactoryRegistry);
+          cm.setMaxTotal(maxTotalHttpClient);
+          cm.closeIdleConnections(maxSecondsIdleConnection, TimeUnit.SECONDS);
+          cm.setDefaultMaxPerRoute(maxClientPerRoute);
+          cm.setValidateAfterInactivity(validateAfterInactivity);
           final CloseableHttpClient httpClient = HttpClients.custom()
-                  .setConnectionManager(connectionManager)
+                  .setConnectionManager(cm)
                   .setDefaultRequestConfig(getRequestConfig())
                   .build();
           return new HttpComponentsClientHttpRequestFactory(httpClient);
@@ -192,15 +208,6 @@ public class ClientConfiguration {
 
     sslContext.init(keyManagers, null, null);
     return sslContext;
-  }
-
-  private CloseableHttpClient getHttpClient() {
-    return HttpClientBuilder
-            .create()
-            .useSystemProperties()
-            .disableRedirectHandling()
-            .setDefaultRequestConfig(getRequestConfig())
-            .build();
   }
 
   private RequestConfig getRequestConfig() {
