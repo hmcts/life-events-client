@@ -2,28 +2,28 @@ package com.github.hmcts.lifeevents.client.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+
+
+import jakarta.annotation.Generated;
 
 /**
  * Informant
  */
-@ApiModel(description = "Informant")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
-public class Informant   {
-  @JsonProperty("name")
+@Schema(name = "Informant", description = "Informant")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-06-05T17:22:06.412789+01:00[Europe/London]")
+public class Informant {
+
   private Name name;
 
-  @JsonProperty("usualAddress")
   private String usualAddress;
 
-  @JsonProperty("qualification")
   private String qualification;
 
-  @JsonProperty("signature")
   private String signature;
 
   public Informant name(Name name) {
@@ -35,10 +35,9 @@ public class Informant   {
    * Get name
    * @return name
   */
-  @ApiModelProperty(value = "")
-
   @Valid
-
+  @Schema(name = "name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("name")
   public Name getName() {
     return name;
   }
@@ -56,9 +55,9 @@ public class Informant   {
    * The usual address of the person, if different from the mother's
    * @return usualAddress
   */
-  @ApiModelProperty(example = "34 Matriarchs Place, Mumstown, Mumford", value = "The usual address of the person, if different from the mother's")
 
-
+  @Schema(name = "usualAddress", example = "34 Matriarchs Place, Mumstown, Mumford", description = "The usual address of the person, if different from the mother's", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("usualAddress")
   public String getUsualAddress() {
     return usualAddress;
   }
@@ -76,9 +75,9 @@ public class Informant   {
    * The qualification of the informant
    * @return qualification
   */
-  @ApiModelProperty(example = "Mother", value = "The qualification of the informant")
 
-
+  @Schema(name = "qualification", example = "Mother", description = "The qualification of the informant", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("qualification")
   public String getQualification() {
     return qualification;
   }
@@ -96,9 +95,9 @@ public class Informant   {
    * The signature of the informant
    * @return signature
   */
-  @ApiModelProperty(example = "J. Smith", value = "The signature of the informant")
 
-
+  @Schema(name = "signature", example = "J. Smith", description = "The signature of the informant", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("signature")
   public String getSignature() {
     return signature;
   }
@@ -107,9 +106,8 @@ public class Informant   {
     this.signature = signature;
   }
 
-
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -132,7 +130,6 @@ public class Informant   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Informant {\n");
-    
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    usualAddress: ").append(toIndentedString(usualAddress)).append("\n");
     sb.append("    qualification: ").append(toIndentedString(qualification)).append("\n");
@@ -145,7 +142,7 @@ public class Informant   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

@@ -2,38 +2,53 @@ package com.github.hmcts.lifeevents.client.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+
+import jakarta.annotation.Generated;
 
 /**
  * The mother of the child that was born
  */
-@ApiModel(description = "The mother of the child that was born")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
-public class Mother1   {
-  @JsonProperty("forenames")
+@Schema(name = "Mother_1", description = "The mother of the child that was born")
+@JsonTypeName("Mother_1")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-06-05T17:22:06.412789+01:00[Europe/London]")
+public class Mother1 {
+
   private String forenames;
 
-  @JsonProperty("surname")
   private String surname;
 
-  @JsonProperty("maidenSurname")
   private String maidenSurname;
 
-  @JsonProperty("marriageSurname")
   private String marriageSurname;
 
-  @JsonProperty("birthplace")
   private String birthplace;
 
-  @JsonProperty("occupation")
   private String occupation;
 
-  @JsonProperty("address")
   private String address;
+
+  /**
+   * Default constructor
+   * @deprecated Use {@link Mother1#Mother1(String, String)}
+   */
+  @Deprecated
+  public Mother1() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public Mother1(String forenames, String surname) {
+    this.forenames = forenames;
+    this.surname = surname;
+  }
 
   public Mother1 forenames(String forenames) {
     this.forenames = forenames;
@@ -44,10 +59,9 @@ public class Mother1   {
    * Forenames of the mother
    * @return forenames
   */
-  @ApiModelProperty(example = "Joan Narcissus Ouroboros", required = true, value = "Forenames of the mother")
   @NotNull
-
-
+  @Schema(name = "forenames", example = "Joan Narcissus Ouroboros", description = "Forenames of the mother", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("forenames")
   public String getForenames() {
     return forenames;
   }
@@ -65,10 +79,9 @@ public class Mother1   {
    * Surname of the mother
    * @return surname
   */
-  @ApiModelProperty(example = "SMITH", required = true, value = "Surname of the mother")
   @NotNull
-
-
+  @Schema(name = "surname", example = "SMITH", description = "Surname of the mother", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("surname")
   public String getSurname() {
     return surname;
   }
@@ -86,9 +99,9 @@ public class Mother1   {
    * Maiden name of the mother
    * @return maidenSurname
   */
-  @ApiModelProperty(example = "BLACK", value = "Maiden name of the mother")
 
-
+  @Schema(name = "maidenSurname", example = "BLACK", description = "Maiden name of the mother", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("maidenSurname")
   public String getMaidenSurname() {
     return maidenSurname;
   }
@@ -106,9 +119,9 @@ public class Mother1   {
    * Surname of the mother at marriage (if different from her maiden name)
    * @return marriageSurname
   */
-  @ApiModelProperty(example = "WHITE", value = "Surname of the mother at marriage (if different from her maiden name)")
 
-
+  @Schema(name = "marriageSurname", example = "WHITE", description = "Surname of the mother at marriage (if different from her maiden name)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("marriageSurname")
   public String getMarriageSurname() {
     return marriageSurname;
   }
@@ -126,9 +139,9 @@ public class Mother1   {
    * The birthplace of the mother
    * @return birthplace
   */
-  @ApiModelProperty(example = "Kensington", value = "The birthplace of the mother")
 
-
+  @Schema(name = "birthplace", example = "Kensington", description = "The birthplace of the mother", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("birthplace")
   public String getBirthplace() {
     return birthplace;
   }
@@ -146,9 +159,9 @@ public class Mother1   {
    * The occupation of the mother
    * @return occupation
   */
-  @ApiModelProperty(example = "Carpenter", value = "The occupation of the mother")
 
-
+  @Schema(name = "occupation", example = "Carpenter", description = "The occupation of the mother", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("occupation")
   public String getOccupation() {
     return occupation;
   }
@@ -166,9 +179,9 @@ public class Mother1   {
    * The mother's usual address (if different from the place of child's birth)
    * @return address
   */
-  @ApiModelProperty(example = "34 Matriarchs Place, Mumstown, Mumford", value = "The mother's usual address (if different from the place of child's birth)")
 
-
+  @Schema(name = "address", example = "34 Matriarchs Place, Mumstown, Mumford", description = "The mother's usual address (if different from the place of child's birth)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("address")
   public String getAddress() {
     return address;
   }
@@ -177,9 +190,8 @@ public class Mother1   {
     this.address = address;
   }
 
-
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -205,7 +217,6 @@ public class Mother1   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Mother1 {\n");
-    
     sb.append("    forenames: ").append(toIndentedString(forenames)).append("\n");
     sb.append("    surname: ").append(toIndentedString(surname)).append("\n");
     sb.append("    maidenSurname: ").append(toIndentedString(maidenSurname)).append("\n");
@@ -221,7 +232,7 @@ public class Mother1   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

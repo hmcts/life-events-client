@@ -2,25 +2,26 @@ package com.github.hmcts.lifeevents.client.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+
+
+import jakarta.annotation.Generated;
 
 /**
  * Father
  */
-@ApiModel(description = "Father")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
-public class Father   {
-  @JsonProperty("name")
+@Schema(name = "Father", description = "Father")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-06-05T17:22:06.412789+01:00[Europe/London]")
+public class Father {
+
   private Name name;
 
-  @JsonProperty("birthplace")
   private String birthplace;
 
-  @JsonProperty("occupation")
   private String occupation;
 
   public Father name(Name name) {
@@ -32,10 +33,9 @@ public class Father   {
    * Get name
    * @return name
   */
-  @ApiModelProperty(value = "")
-
   @Valid
-
+  @Schema(name = "name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("name")
   public Name getName() {
     return name;
   }
@@ -53,9 +53,9 @@ public class Father   {
    * The birthplace of the person
    * @return birthplace
   */
-  @ApiModelProperty(example = "Kensington", value = "The birthplace of the person")
 
-
+  @Schema(name = "birthplace", example = "Kensington", description = "The birthplace of the person", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("birthplace")
   public String getBirthplace() {
     return birthplace;
   }
@@ -73,9 +73,9 @@ public class Father   {
    * The occupation of the parent
    * @return occupation
   */
-  @ApiModelProperty(example = "Carpenter", value = "The occupation of the parent")
 
-
+  @Schema(name = "occupation", example = "Carpenter", description = "The occupation of the parent", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("occupation")
   public String getOccupation() {
     return occupation;
   }
@@ -84,9 +84,8 @@ public class Father   {
     this.occupation = occupation;
   }
 
-
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -108,7 +107,6 @@ public class Father   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Father {\n");
-    
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    birthplace: ").append(toIndentedString(birthplace)).append("\n");
     sb.append("    occupation: ").append(toIndentedString(occupation)).append("\n");
@@ -120,7 +118,7 @@ public class Father   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }
