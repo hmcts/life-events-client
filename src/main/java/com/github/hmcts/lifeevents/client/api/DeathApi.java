@@ -57,7 +57,7 @@ public interface DeathApi {
                     })
             },
             security = {
-                    @SecurityRequirement(name = "bearerToken", scopes={  })
+                    @SecurityRequirement(name = "Authorization")
             }
     )
     @RequestMapping(
@@ -94,7 +94,7 @@ public interface DeathApi {
                     })
             },
             security = {
-                    @SecurityRequirement(name = "bearerToken", scopes={  })
+                    @SecurityRequirement(name = "Authorization")
             }
     )
     @RequestMapping(
