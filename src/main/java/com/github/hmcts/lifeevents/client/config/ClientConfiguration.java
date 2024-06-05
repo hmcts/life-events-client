@@ -26,17 +26,16 @@ import javax.net.ssl.SSLSocketFactory;
 
 import feign.Client;
 import feign.RequestInterceptor;
-import org.apache.http.client.config.CookieSpecs;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.config.Registry;
-import org.apache.http.config.RegistryBuilder;
-import org.apache.http.conn.socket.ConnectionSocketFactory;
-import org.apache.http.conn.socket.PlainConnectionSocketFactory;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.core5.http.config.Registry;
+import org.apache.hc.core5.http.config.RegistryBuilder;
+import org.apache.hc.client5.http.socket.ConnectionSocketFactory;
+import org.apache.hc.client5.http.socket.PlainConnectionSocketFactory;
+import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
@@ -59,6 +58,7 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.core.http.converter.OAuth2AccessTokenResponseHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+
 @EnableConfigurationProperties
 public class ClientConfiguration {
 
@@ -69,14 +69,8 @@ public class ClientConfiguration {
   @Value("${http.client.max.total}")
   private int maxTotalHttpClient;
 
-  @Value("${http.client.seconds.idle.connection}")
-  private int maxSecondsIdleConnection;
-
   @Value("${http.client.max.client_per_route}")
   private int maxClientPerRoute;
-
-  @Value("${http.client.validate.after.inactivity}")
-  private int validateAfterInactivity;
 
   public ClientConfiguration(ClientRegistrationRepository clientRegistrationRepository) {
     this.clientRegistrationRepository = clientRegistrationRepository;
@@ -116,9 +110,7 @@ public class ClientConfiguration {
           final PoolingHttpClientConnectionManager cm =
                   new PoolingHttpClientConnectionManager(socketFactoryRegistry);
           cm.setMaxTotal(maxTotalHttpClient);
-          cm.closeIdleConnections(maxSecondsIdleConnection, TimeUnit.SECONDS);
           cm.setDefaultMaxPerRoute(maxClientPerRoute);
-          cm.setValidateAfterInactivity(validateAfterInactivity);
           final CloseableHttpClient httpClient = HttpClients.custom()
                   .setConnectionManager(cm)
                   .setDefaultRequestConfig(getRequestConfig())
@@ -213,10 +205,8 @@ public class ClientConfiguration {
   private RequestConfig getRequestConfig() {
     int timeout = 10000;
     return RequestConfig.custom()
-            .setConnectTimeout(timeout)
-            .setConnectionRequestTimeout(timeout)
-            .setSocketTimeout(timeout)
-            .setCookieSpec(CookieSpecs.STANDARD)
+            .setResponseTimeout(timeout, TimeUnit.MILLISECONDS)
+            .setConnectionRequestTimeout(timeout, TimeUnit.MILLISECONDS)
             .build();
   }
 }
