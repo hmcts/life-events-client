@@ -2,47 +2,64 @@ package com.github.hmcts.lifeevents.client.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.time.LocalDate;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+
+import jakarta.annotation.Generated;
 
 /**
- * A record of a birth
+ * A record of a birth (Note: You will only receive the fields you are authorized to view, regardless of whether we hold them on file)
  */
-@ApiModel(description = "A record of a birth")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
-public class V0Birth   {
-  @JsonProperty("date")
-  @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE)
+@Schema(name = "v0-Birth", description = "A record of a birth (Note: You will only receive the fields you are authorized to view, regardless of whether we hold them on file)")
+@JsonTypeName("v0-Birth")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-06-05T17:22:06.412789+01:00[Europe/London]")
+public class V0Birth {
+
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
   private LocalDate date;
 
-  @JsonProperty("location")
   private Location location;
 
-  @JsonProperty("registrarSignature")
   private String registrarSignature;
 
-  @JsonProperty("type")
   private String type;
 
-  @JsonProperty("id")
   private Integer id;
 
-  @JsonProperty("subjects")
   private Subjects subjects;
 
-  @JsonProperty("systemNumber")
   private Integer systemNumber;
 
-  @JsonProperty("status")
   private Status status;
 
-  @JsonProperty("previousRegistration")
   private PreviousRegistration previousRegistration;
+
+  /**
+   * Default constructor
+   * @deprecated Use {@link V0Birth#V0Birth(Location, Integer, Subjects, Status, PreviousRegistration)}
+   */
+  @Deprecated
+  public V0Birth() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public V0Birth(Location location, Integer id, Subjects subjects, Status status, PreviousRegistration previousRegistration) {
+    this.location = location;
+    this.id = id;
+    this.subjects = subjects;
+    this.status = status;
+    this.previousRegistration = previousRegistration;
+  }
 
   public V0Birth date(LocalDate date) {
     this.date = date;
@@ -53,10 +70,9 @@ public class V0Birth   {
    * Date of the event
    * @return date
   */
-  @ApiModelProperty(example = "Tue Aug 09 01:00:00 BST 2011", value = "Date of the event")
-
   @Valid
-
+  @Schema(name = "date", example = "Tue Aug 09 01:00:00 BST 2011", description = "Date of the event", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("date")
   public LocalDate getDate() {
     return date;
   }
@@ -74,11 +90,9 @@ public class V0Birth   {
    * Get location
    * @return location
   */
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
-
-  @Valid
-
+  @NotNull @Valid
+  @Schema(name = "location", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("location")
   public Location getLocation() {
     return location;
   }
@@ -96,9 +110,9 @@ public class V0Birth   {
    * Signature of registrar
    * @return registrarSignature
   */
-  @ApiModelProperty(example = "J. Smith", value = "Signature of registrar")
 
-
+  @Schema(name = "registrarSignature", example = "J. Smith", description = "Signature of registrar", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("registrarSignature")
   public String getRegistrarSignature() {
     return registrarSignature;
   }
@@ -116,9 +130,9 @@ public class V0Birth   {
    * Type of the event
    * @return type
   */
-  @ApiModelProperty(example = "birth", value = "Type of the event")
 
-
+  @Schema(name = "type", example = "birth", description = "Type of the event", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("type")
   public String getType() {
     return type;
   }
@@ -136,10 +150,9 @@ public class V0Birth   {
    * Unique ID for this event
    * @return id
   */
-  @ApiModelProperty(required = true, value = "Unique ID for this event")
   @NotNull
-
-
+  @Schema(name = "id", description = "Unique ID for this event", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("id")
   public Integer getId() {
     return id;
   }
@@ -157,11 +170,9 @@ public class V0Birth   {
    * Get subjects
    * @return subjects
   */
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
-
-  @Valid
-
+  @NotNull @Valid
+  @Schema(name = "subjects", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("subjects")
   public Subjects getSubjects() {
     return subjects;
   }
@@ -179,9 +190,9 @@ public class V0Birth   {
    * System number for this event
    * @return systemNumber
   */
-  @ApiModelProperty(value = "System number for this event")
 
-
+  @Schema(name = "systemNumber", description = "System number for this event", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("systemNumber")
   public Integer getSystemNumber() {
     return systemNumber;
   }
@@ -199,11 +210,9 @@ public class V0Birth   {
    * Get status
    * @return status
   */
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
-
-  @Valid
-
+  @NotNull @Valid
+  @Schema(name = "status", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("status")
   public Status getStatus() {
     return status;
   }
@@ -221,11 +230,9 @@ public class V0Birth   {
    * Get previousRegistration
    * @return previousRegistration
   */
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
-
-  @Valid
-
+  @NotNull @Valid
+  @Schema(name = "previousRegistration", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("previousRegistration")
   public PreviousRegistration getPreviousRegistration() {
     return previousRegistration;
   }
@@ -234,9 +241,8 @@ public class V0Birth   {
     this.previousRegistration = previousRegistration;
   }
 
-
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -264,7 +270,6 @@ public class V0Birth   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class V0Birth {\n");
-    
     sb.append("    date: ").append(toIndentedString(date)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    registrarSignature: ").append(toIndentedString(registrarSignature)).append("\n");
@@ -282,7 +287,7 @@ public class V0Birth   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

@@ -2,32 +2,48 @@ package com.github.hmcts.lifeevents.client.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+
+import jakarta.annotation.Generated;
 
 /**
  * The father of the child that was born
  */
-@ApiModel(description = "The father of the child that was born")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
-public class Father1   {
-  @JsonProperty("forenames")
+@Schema(name = "Father_1", description = "The father of the child that was born")
+@JsonTypeName("Father_1")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-06-05T17:22:06.412789+01:00[Europe/London]")
+public class Father1 {
+
   private String forenames;
 
-  @JsonProperty("surname")
   private String surname;
 
-  @JsonProperty("birthplace")
   private String birthplace;
 
-  @JsonProperty("occupation")
   private String occupation;
 
-  @JsonProperty("deceased")
   private Boolean deceased;
+
+  /**
+   * Default constructor
+   * @deprecated Use {@link Father1#Father1(Boolean)}
+   */
+  @Deprecated
+  public Father1() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public Father1(Boolean deceased) {
+    this.deceased = deceased;
+  }
 
   public Father1 forenames(String forenames) {
     this.forenames = forenames;
@@ -38,9 +54,9 @@ public class Father1   {
    * Forenames of the father
    * @return forenames
   */
-  @ApiModelProperty(example = "Joan Narcissus Ouroboros", value = "Forenames of the father")
 
-
+  @Schema(name = "forenames", example = "Joan Narcissus Ouroboros", description = "Forenames of the father", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("forenames")
   public String getForenames() {
     return forenames;
   }
@@ -58,9 +74,9 @@ public class Father1   {
    * Surname of the father
    * @return surname
   */
-  @ApiModelProperty(example = "SMITH", value = "Surname of the father")
 
-
+  @Schema(name = "surname", example = "SMITH", description = "Surname of the father", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("surname")
   public String getSurname() {
     return surname;
   }
@@ -78,9 +94,9 @@ public class Father1   {
    * The birthplace of the father
    * @return birthplace
   */
-  @ApiModelProperty(example = "Kensington", value = "The birthplace of the father")
 
-
+  @Schema(name = "birthplace", example = "Kensington", description = "The birthplace of the father", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("birthplace")
   public String getBirthplace() {
     return birthplace;
   }
@@ -98,9 +114,9 @@ public class Father1   {
    * The occupation of the father
    * @return occupation
   */
-  @ApiModelProperty(example = "Carpenter", value = "The occupation of the father")
 
-
+  @Schema(name = "occupation", example = "Carpenter", description = "The occupation of the father", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("occupation")
   public String getOccupation() {
     return occupation;
   }
@@ -118,10 +134,9 @@ public class Father1   {
    * Whether the father was deceased at the point of birth
    * @return deceased
   */
-  @ApiModelProperty(example = "false", required = true, value = "Whether the father was deceased at the point of birth")
   @NotNull
-
-
+  @Schema(name = "deceased", example = "false", description = "Whether the father was deceased at the point of birth", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("deceased")
   public Boolean getDeceased() {
     return deceased;
   }
@@ -130,9 +145,8 @@ public class Father1   {
     this.deceased = deceased;
   }
 
-
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -156,7 +170,6 @@ public class Father1   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Father1 {\n");
-    
     sb.append("    forenames: ").append(toIndentedString(forenames)).append("\n");
     sb.append("    surname: ").append(toIndentedString(surname)).append("\n");
     sb.append("    birthplace: ").append(toIndentedString(birthplace)).append("\n");
@@ -170,7 +183,7 @@ public class Father1   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

@@ -7,6 +7,12 @@ lev:
     password: ${LEV_PASSWORD:}
 
 spring:
+  main:
+    allow-bean-definition-overriding: true
+  cloud:
+    mvc:
+      token-relay:
+        enabled: false
   security:
     oauth2:
       client:

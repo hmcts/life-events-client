@@ -2,35 +2,56 @@ package com.github.hmcts.lifeevents.client.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.time.LocalDate;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+
+import jakarta.annotation.Generated;
 
 /**
  * A record of a marriage (Note: You will only receive the fields you are authorized to view, regardless of whether we hold them on file)
  */
-@ApiModel(description = "A record of a marriage (Note: You will only receive the fields you are authorized to view, regardless of whether we hold them on file)")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
-public class V1Marriage   {
-  @JsonProperty("id")
+@Schema(name = "v1-Marriage", description = "A record of a marriage (Note: You will only receive the fields you are authorized to view, regardless of whether we hold them on file)")
+@JsonTypeName("v1-Marriage")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-06-05T17:22:06.412789+01:00[Europe/London]")
+public class V1Marriage {
+
   private Integer id;
 
-  @JsonProperty("dateOfMarriage")
-  @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE)
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
   private LocalDate dateOfMarriage;
 
-  @JsonProperty("groom")
   private Groom groom;
 
-  @JsonProperty("bride")
   private Bride bride;
 
-  @JsonProperty("status")
   private Status2 status;
+
+  /**
+   * Default constructor
+   * @deprecated Use {@link V1Marriage#V1Marriage(Integer, LocalDate, Groom, Bride, Status2)}
+   */
+  @Deprecated
+  public V1Marriage() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public V1Marriage(Integer id, LocalDate dateOfMarriage, Groom groom, Bride bride, Status2 status) {
+    this.id = id;
+    this.dateOfMarriage = dateOfMarriage;
+    this.groom = groom;
+    this.bride = bride;
+    this.status = status;
+  }
 
   public V1Marriage id(Integer id) {
     this.id = id;
@@ -41,10 +62,9 @@ public class V1Marriage   {
    * System number for this event
    * @return id
   */
-  @ApiModelProperty(required = true, value = "System number for this event")
   @NotNull
-
-
+  @Schema(name = "id", description = "System number for this event", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("id")
   public Integer getId() {
     return id;
   }
@@ -62,11 +82,9 @@ public class V1Marriage   {
    * Date of the marriage
    * @return dateOfMarriage
   */
-  @ApiModelProperty(example = "Fri Aug 08 01:00:00 BST 2008", required = true, value = "Date of the marriage")
-  @NotNull
-
-  @Valid
-
+  @NotNull @Valid
+  @Schema(name = "dateOfMarriage", example = "Fri Aug 08 01:00:00 BST 2008", description = "Date of the marriage", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("dateOfMarriage")
   public LocalDate getDateOfMarriage() {
     return dateOfMarriage;
   }
@@ -84,11 +102,9 @@ public class V1Marriage   {
    * Get groom
    * @return groom
   */
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
-
-  @Valid
-
+  @NotNull @Valid
+  @Schema(name = "groom", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("groom")
   public Groom getGroom() {
     return groom;
   }
@@ -106,11 +122,9 @@ public class V1Marriage   {
    * Get bride
    * @return bride
   */
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
-
-  @Valid
-
+  @NotNull @Valid
+  @Schema(name = "bride", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("bride")
   public Bride getBride() {
     return bride;
   }
@@ -128,11 +142,9 @@ public class V1Marriage   {
    * Get status
    * @return status
   */
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
-
-  @Valid
-
+  @NotNull @Valid
+  @Schema(name = "status", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("status")
   public Status2 getStatus() {
     return status;
   }
@@ -141,9 +153,8 @@ public class V1Marriage   {
     this.status = status;
   }
 
-
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -167,7 +178,6 @@ public class V1Marriage   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class V1Marriage {\n");
-    
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    dateOfMarriage: ").append(toIndentedString(dateOfMarriage)).append("\n");
     sb.append("    groom: ").append(toIndentedString(groom)).append("\n");
@@ -181,7 +191,7 @@ public class V1Marriage   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }
