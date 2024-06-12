@@ -15,6 +15,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.web.client.RestTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,7 +36,7 @@ public class AutoConfigurationTest {
     public void haveApi() {
         assertThat(context.getBeanNamesForType(DeathApiClient.class)).hasSize(1);
         assertThat(context.getBeanNamesForType(DeathService.class)).hasSize(1);
-        assertThat(context.getBeanNamesForType(OAuth2AuthorizedClientManager.class)).hasSize(1);
+        assertThat(context.getBeanNamesForType(RestTemplate.class)).hasSize(1);
         assertThat(context.getBeanNamesForType(RequestInterceptor.class)).hasSize(1);
         assertThat(context.getBeanNamesForType(Client.class)).hasSize(1);
     }
