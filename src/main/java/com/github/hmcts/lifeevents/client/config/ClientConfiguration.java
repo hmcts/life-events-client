@@ -46,12 +46,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorHandler;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
@@ -95,6 +97,7 @@ public class ClientConfiguration {
   }
 
   @Bean("client-http-request-factory")
+  @ConditionalOnProperty(name = "lev.ssl.publicCertificate")
   Supplier<ClientHttpRequestFactory> defaultClientHttpRequestFactory(
           @Value("${lev.ssl.publicCertificate}") String publicCertificate,
           @Value("${lev.ssl.privateKey}") String privateKey
@@ -132,6 +135,23 @@ public class ClientConfiguration {
         }
       };
     }
+  }
+
+  @Bean("client-http-request-factory")
+  @ConditionalOnMissingBean(name = "client-http-request-factory")
+  Supplier<ClientHttpRequestFactory> noOpClientHttpRequestFactory() {
+    logger.info("No SSL configuration provided, using default HTTP client");
+    final PoolingHttpClientConnectionManager cm =
+            new PoolingHttpClientConnectionManager();
+    cm.setMaxTotal(maxTotalHttpClient);
+    cm.closeIdleConnections(maxSecondsIdleConnection, TimeUnit.SECONDS);
+    cm.setDefaultMaxPerRoute(maxClientPerRoute);
+    cm.setValidateAfterInactivity(validateAfterInactivity);
+    final CloseableHttpClient httpClient = HttpClients.custom()
+            .setConnectionManager(cm)
+            .setDefaultRequestConfig(getRequestConfig())
+            .build();
+    return () -> new HttpComponentsClientHttpRequestFactory(httpClient);
   }
 
   @Bean
