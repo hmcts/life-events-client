@@ -1,94 +1,69 @@
 package com.github.hmcts.lifeevents.client.config;
 
-import java.util.Collection;
-import java.util.Collections;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.client.ClientAuthorizationException;
-import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.core.endpoint.OAuth2AccessTokenResponse;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
-import static java.util.Objects.isNull;
+import java.util.Objects;
+
 
 public class OAuthClientCredentialsFeignManager {
     private static final Logger logger = LoggerFactory.getLogger(OAuthClientCredentialsFeignManager.class);
 
-    private final OAuth2AuthorizedClientManager manager;
-    private final Authentication principal;
     private final ClientRegistration clientRegistration;
+    private final RestTemplate restTemplate;
+    private final String username;
+    private final String password;
 
-    public OAuthClientCredentialsFeignManager(OAuth2AuthorizedClientManager manager, ClientRegistration clientRegistration) {
-        this.manager = manager;
+
+    public OAuthClientCredentialsFeignManager(ClientRegistration clientRegistration,
+                                              RestTemplate restTemplate,
+                                              String username,
+                                              String password) {
         this.clientRegistration = clientRegistration;
-        this.principal = createPrincipal();
-    }
-
-    private Authentication createPrincipal() {
-        
-        return new Authentication() {
-            @Override
-            public Collection<? extends GrantedAuthority> getAuthorities() {
-                return Collections.emptySet();
-            }
-
-            @Override
-            public Object getCredentials() {
-                return null;
-            }
-
-            @Override
-            public Object getDetails() {
-                return null;
-            }
-
-            @Override
-            public Object getPrincipal() {
-                return this;
-            }
-
-            @Override
-            public boolean isAuthenticated() {
-                return false;
-            }
-
-            @Override
-            public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-            }
-
-            @Override
-            public String getName() {
-                return clientRegistration.getClientId();
-            }
-        };
+        this.restTemplate = restTemplate;
+        this.username = username;
+        this.password = password;
     }
 
     public String getAccessToken() {
         try {
-            OAuth2AuthorizeRequest oAuth2AuthorizeRequest = OAuth2AuthorizeRequest
-                .withClientRegistrationId(clientRegistration.getRegistrationId())
-                .principal(principal)
-                .build();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-            logger.info("OAuthClientCredentialsFeignManager.getAccessToken() clientId: " + clientRegistration.getClientId());
-            OAuth2AuthorizedClient client = null;
-            try {
-                client = manager.authorize(oAuth2AuthorizeRequest);
-            } catch (ClientAuthorizationException cae) {
-                if("Token is not active".equals(cae.getError().getDescription())){
-                    client = manager.authorize(oAuth2AuthorizeRequest);
-                }
+            MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+            map.add("grant_type", clientRegistration.getAuthorizationGrantType().getValue());
+            map.add("client_id", clientRegistration.getClientId());
+            map.add("client_secret", clientRegistration.getClientSecret());
+            map.add("username", username);
+            map.add("password", password);
+            logger.info("OAuthClientCredentialsFeignManager getAccessToken with grant_type: {}, client_id: {}", clientRegistration.getAuthorizationGrantType().getValue(), clientRegistration.getClientId());
+            HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+
+            ResponseEntity<OAuth2AccessTokenResponse> response = restTemplate.exchange(
+                    clientRegistration.getProviderDetails().getTokenUri(),
+                    HttpMethod.POST,
+                    request,
+                    OAuth2AccessTokenResponse.class
+            );
+
+            if (!response.getStatusCode().is2xxSuccessful()) {
+                throw new HttpClientErrorException(response.getStatusCode(), "Failed to get LEV token");
             }
-            if (isNull(client)) {
-                throw new IllegalStateException("Password flow on " + clientRegistration.getRegistrationId() + " failed, client is null");
-            }
-            return client.getAccessToken().getTokenValue();
-        } catch (Exception exp) {
-            logger.error("client credentials error " + exp.getMessage(), exp);
+            return Objects.requireNonNull(response.getBody()).getAccessToken().getTokenValue();
+        } catch (RestClientException exp) {
+            logger.error("client credentials error {}", exp.getMessage(), exp);
         }
         return null;
     }
