@@ -6,15 +6,15 @@ import com.github.hmcts.lifeevents.client.service.DeathServiceImpl;
 import com.github.hmcts.lifeevents.client.service.NoOpDeathServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
-@Configuration
+@AutoConfiguration
 @EnableConfigurationProperties
 @EnableFeignClients(clients = DeathApiClient.class)
 public class ServiceConfiguration {
