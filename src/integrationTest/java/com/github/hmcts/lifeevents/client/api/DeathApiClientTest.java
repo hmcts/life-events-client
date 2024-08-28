@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.github.hmcts.lifeevents.client.config.ClientConfiguration;
+import com.github.hmcts.lifeevents.client.config.ServiceConfiguration;
 import com.github.hmcts.lifeevents.client.model.V1Death;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,8 +19,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(classes = { ClientConfiguration.class }, properties = {
-        "lev.death.url=https://api.uat.notprod.lev.homeoffice.gov.uk"
+@SpringBootTest(classes = { ClientConfiguration.class, ServiceConfiguration.class }, properties = {
+        "lev.death.url=https://api.life-event-verification.homeoffice.gov.uk"
 })
 @ActiveProfiles("test")
 @EnableConfigurationProperties

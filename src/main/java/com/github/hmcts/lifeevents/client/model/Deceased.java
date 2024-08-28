@@ -4,32 +4,32 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDate;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+
+import jakarta.annotation.Generated;
 
 /**
  * The person that died
  */
-@ApiModel(description = "The person that died")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2021-03-10T16:10:49.642712Z[Europe/London]")
 
-public class Deceased   {
-  @JsonProperty("forenames")
+@Schema(name = "Deceased", description = "The person that died")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-06-05T17:22:06.412789+01:00[Europe/London]")
+public class Deceased {
+
   private String forenames;
 
-  @JsonProperty("surname")
   private String surname;
 
-  @JsonProperty("dateOfBirth")
-  @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE)
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
   private LocalDate dateOfBirth;
 
-  @JsonProperty("dateOfDeath")
-  @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE)
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
   private LocalDate dateOfDeath;
 
   /**
@@ -37,9 +37,9 @@ public class Deceased   {
    */
   public enum SexEnum {
     MALE("Male"),
-    
+
     FEMALE("Female"),
-    
+
     INDETERMINATE("Indeterminate");
 
     private String value;
@@ -69,26 +69,38 @@ public class Deceased   {
     }
   }
 
-  @JsonProperty("sex")
   private SexEnum sex;
 
-  @JsonProperty("birthplace")
   private String birthplace;
 
-  @JsonProperty("deathplace")
   private String deathplace;
 
-  @JsonProperty("occupation")
   private String occupation;
 
-  @JsonProperty("address")
   private String address;
 
-  @JsonProperty("retired")
   private Boolean retired;
 
-  @JsonProperty("maidenSurname")
   private String maidenSurname;
+
+  /**
+   * Default constructor
+   * @deprecated Use {@link Deceased#Deceased(String, String, LocalDate, SexEnum)}
+   */
+  @Deprecated
+  public Deceased() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public Deceased(String forenames, String surname, LocalDate dateOfDeath, SexEnum sex) {
+    this.forenames = forenames;
+    this.surname = surname;
+    this.dateOfDeath = dateOfDeath;
+    this.sex = sex;
+  }
 
   public Deceased forenames(String forenames) {
     this.forenames = forenames;
@@ -99,10 +111,9 @@ public class Deceased   {
    * Forenames of the deceased
    * @return forenames
   */
-  @ApiModelProperty(example = "Joan Narcissus Ouroboros", required = true, value = "Forenames of the deceased")
   @NotNull
-
-
+  @Schema(name = "forenames", example = "Joan Narcissus Ouroboros", description = "Forenames of the deceased", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("forenames")
   public String getForenames() {
     return forenames;
   }
@@ -120,10 +131,9 @@ public class Deceased   {
    * Surname of the deceased
    * @return surname
   */
-  @ApiModelProperty(example = "SMITH", required = true, value = "Surname of the deceased")
   @NotNull
-
-
+  @Schema(name = "surname", example = "SMITH", description = "Surname of the deceased", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("surname")
   public String getSurname() {
     return surname;
   }
@@ -141,10 +151,9 @@ public class Deceased   {
    * Date the deceased was born
    * @return dateOfBirth
   */
-  @ApiModelProperty(example = "Mon Aug 08 01:00:00 BST 2011", value = "Date the deceased was born")
-
   @Valid
-
+  @Schema(name = "dateOfBirth", example = "Mon Aug 08 01:00:00 BST 2011", description = "Date the deceased was born", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("dateOfBirth")
   public LocalDate getDateOfBirth() {
     return dateOfBirth;
   }
@@ -162,11 +171,9 @@ public class Deceased   {
    * Date the person died
    * @return dateOfDeath
   */
-  @ApiModelProperty(example = "Mon Aug 08 01:00:00 BST 2011", required = true, value = "Date the person died")
-  @NotNull
-
-  @Valid
-
+  @NotNull @Valid
+  @Schema(name = "dateOfDeath", example = "Mon Aug 08 01:00:00 BST 2011", description = "Date the person died", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("dateOfDeath")
   public LocalDate getDateOfDeath() {
     return dateOfDeath;
   }
@@ -184,10 +191,9 @@ public class Deceased   {
    * Sex of the deceased
    * @return sex
   */
-  @ApiModelProperty(example = "Indeterminate", required = true, value = "Sex of the deceased")
   @NotNull
-
-
+  @Schema(name = "sex", example = "Indeterminate", description = "Sex of the deceased", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("sex")
   public SexEnum getSex() {
     return sex;
   }
@@ -205,9 +211,9 @@ public class Deceased   {
    * The birthplace of the deceased
    * @return birthplace
   */
-  @ApiModelProperty(example = "Kensington", value = "The birthplace of the deceased")
 
-
+  @Schema(name = "birthplace", example = "Kensington", description = "The birthplace of the deceased", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("birthplace")
   public String getBirthplace() {
     return birthplace;
   }
@@ -225,9 +231,9 @@ public class Deceased   {
    * The place the person died
    * @return deathplace
   */
-  @ApiModelProperty(example = "Kensington", value = "The place the person died")
 
-
+  @Schema(name = "deathplace", example = "Kensington", description = "The place the person died", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("deathplace")
   public String getDeathplace() {
     return deathplace;
   }
@@ -245,9 +251,9 @@ public class Deceased   {
    * The occupation of the deceased
    * @return occupation
   */
-  @ApiModelProperty(example = "Unemployed", value = "The occupation of the deceased")
 
-
+  @Schema(name = "occupation", example = "Unemployed", description = "The occupation of the deceased", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("occupation")
   public String getOccupation() {
     return occupation;
   }
@@ -265,9 +271,9 @@ public class Deceased   {
    * The deceased's address
    * @return address
   */
-  @ApiModelProperty(example = "888 Death House, 8 Death lane, Deadington, Deadshire", value = "The deceased's address")
 
-
+  @Schema(name = "address", example = "888 Death House, 8 Death lane, Deadington, Deadshire", description = "The deceased's address", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("address")
   public String getAddress() {
     return address;
   }
@@ -285,9 +291,9 @@ public class Deceased   {
    * Whether the deceased was retired
    * @return retired
   */
-  @ApiModelProperty(example = "true", value = "Whether the deceased was retired")
 
-
+  @Schema(name = "retired", example = "true", description = "Whether the deceased was retired", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("retired")
   public Boolean getRetired() {
     return retired;
   }
@@ -305,9 +311,9 @@ public class Deceased   {
    * Maiden name of the deceased
    * @return maidenSurname
   */
-  @ApiModelProperty(example = "BLACK", value = "Maiden name of the deceased")
 
-
+  @Schema(name = "maidenSurname", example = "BLACK", description = "Maiden name of the deceased", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("maidenSurname")
   public String getMaidenSurname() {
     return maidenSurname;
   }
@@ -316,9 +322,8 @@ public class Deceased   {
     this.maidenSurname = maidenSurname;
   }
 
-
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -348,7 +353,6 @@ public class Deceased   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Deceased {\n");
-    
     sb.append("    forenames: ").append(toIndentedString(forenames)).append("\n");
     sb.append("    surname: ").append(toIndentedString(surname)).append("\n");
     sb.append("    dateOfBirth: ").append(toIndentedString(dateOfBirth)).append("\n");
@@ -368,7 +372,7 @@ public class Deceased   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }
