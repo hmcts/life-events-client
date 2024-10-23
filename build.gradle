@@ -181,7 +181,7 @@ dependencies {
     }
 
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.11.3'
-    testImplementation group: 'org.wiremock', name: 'wiremock-standalone', version: '3.9.1'
+    testImplementation group: 'org.wiremock', name: 'wiremock-standalone', version: '3.9.2'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'junit', module: 'junit'
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
