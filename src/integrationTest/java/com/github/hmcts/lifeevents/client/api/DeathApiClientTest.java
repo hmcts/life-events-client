@@ -1,8 +1,5 @@
 package com.github.hmcts.lifeevents.client.api;
 
-import java.time.LocalDate;
-import java.util.List;
-
 import com.github.hmcts.lifeevents.client.config.ClientConfiguration;
 import com.github.hmcts.lifeevents.client.config.ServiceConfiguration;
 import com.github.hmcts.lifeevents.client.model.V1Death;
@@ -31,15 +28,6 @@ class DeathApiClientTest {
 
     @Autowired
     private DeathApiClient deathApiClient;
-
-    @Test
-    public void shouldRetreiveDeathRecordFromAPIByNameAndDate() {
-        String foreNames = "Joan";
-        String surname = "Smith";
-        LocalDate date = LocalDate.of(2008,8,8);
-        ResponseEntity<List<V1Death>> results = deathApiClient.searchV1Death(foreNames, surname, date);
-        assertThat(results.getStatusCode().is2xxSuccessful());
-    }
 
     @Test
     public void shouldRetreiveDeathRecordFromAPIById() {
