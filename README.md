@@ -31,12 +31,7 @@ To build the project execute the following command:
 ```
 
 ### Publishing the library
-
-To check which versions is available on jitpack:
-https://jitpack.io/com/github/hmcts/life-events-client/
-
-To check on the build log on the version:
-https://jitpack.io/com/github/hmcts/life-events-client/{version}/build.log
+Releases are created on [github](https://github.com/hmcts/life-events-client/releases/new) and are internally available through azure artifacts [hmcts-lib](https://dev.azure.com/hmcts/Artifacts/_artifacts/feed/hmcts-lib) feed
 
 ## License
 
