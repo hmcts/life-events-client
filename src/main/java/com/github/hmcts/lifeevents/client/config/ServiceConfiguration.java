@@ -19,29 +19,30 @@ import org.springframework.core.env.Environment;
 @EnableFeignClients(clients = DeathApiClient.class)
 public class ServiceConfiguration {
 
-  private static final Logger logger = LoggerFactory.getLogger(ServiceConfiguration.class);
+    private static final Logger logger = LoggerFactory.getLogger(ServiceConfiguration.class);
 
-  private Environment environment;
+    private Environment environment;
 
-  private DeathApiClient deathApiClient;
+    private DeathApiClient deathApiClient;
 
-  public ServiceConfiguration(final DeathApiClient deathApiClient, Environment environment) {
-    this.deathApiClient = deathApiClient;
-    this.environment = environment;
-    logger.info("spring.security.oauth2.client.provider.homeoffice.authorization-uri: " + environment.getProperty("spring.security.oauth2.client.provider.homeoffice.authorization-uri"));
-  }
+    public ServiceConfiguration(final DeathApiClient deathApiClient, Environment environment) {
+        this.deathApiClient = deathApiClient;
+        this.environment = environment;
+        logger.info("spring.security.oauth2.client.provider.homeoffice.authorization-uri: "
+                + environment.getProperty("spring.security.oauth2.client.provider.homeoffice.authorization-uri"));
+    }
 
-  @Bean
-  @ConditionalOnProperty(name = "lev.ssl.publicCertificate")
-  public DeathService deathService() {
-    logger.info("lev.ssl.publicCertificate: " + environment.getProperty("lev.ssl.publicCertificate"));
-    return new DeathServiceImpl(deathApiClient);
-  }
+    @Bean
+    @ConditionalOnProperty(name = "lev.ssl.publicCertificate")
+    public DeathService deathService() {
+        logger.info("lev.ssl.publicCertificate: " + environment.getProperty("lev.ssl.publicCertificate"));
+        return new DeathServiceImpl(deathApiClient);
+    }
 
-  @Bean
-  @ConditionalOnMissingBean(value = DeathService.class)
-  public DeathService noOpDeathService() {
-    logger.info("lev.ssl.publicCertificate: " + environment.getProperty("lev.ssl.publicCertificate"));
-    return new NoOpDeathServiceImpl();
-  }
+    @Bean
+    @ConditionalOnMissingBean(value = DeathService.class)
+    public DeathService noOpDeathService() {
+        logger.info("lev.ssl.publicCertificate: " + environment.getProperty("lev.ssl.publicCertificate"));
+        return new NoOpDeathServiceImpl();
+    }
 }

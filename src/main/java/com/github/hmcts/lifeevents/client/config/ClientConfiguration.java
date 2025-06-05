@@ -62,151 +62,150 @@ import org.springframework.web.client.RestTemplate;
 @EnableConfigurationProperties
 public class ClientConfiguration {
 
-  private static final Logger logger = LoggerFactory.getLogger(ClientConfiguration.class);
+    private static final Logger logger = LoggerFactory.getLogger(ClientConfiguration.class);
 
-  private final ClientRegistrationRepository clientRegistrationRepository;
+    private final ClientRegistrationRepository clientRegistrationRepository;
 
-  @Value("${http.client.max.total}")
-  private int maxTotalHttpClient;
+    @Value("${http.client.max.total}")
+    private int maxTotalHttpClient;
 
-  @Value("${http.client.max.client_per_route}")
-  private int maxClientPerRoute;
+    @Value("${http.client.max.client_per_route}")
+    private int maxClientPerRoute;
 
-  public ClientConfiguration(ClientRegistrationRepository clientRegistrationRepository) {
-    this.clientRegistrationRepository = clientRegistrationRepository;
-  }
+    public ClientConfiguration(ClientRegistrationRepository clientRegistrationRepository) {
+        this.clientRegistrationRepository = clientRegistrationRepository;
+    }
 
-  @Bean
-  public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder,
-                                   @Qualifier("client-http-request-factory") Supplier<ClientHttpRequestFactory> clientHttpRequestFactory) {
-    return restTemplateBuilder
-              .requestFactory(clientHttpRequestFactory)
-              .messageConverters(Arrays.asList(
-                      new FormHttpMessageConverter(),
-                      new OAuth2AccessTokenResponseHttpMessageConverter()))
-              .errorHandler(new OAuth2ErrorResponseErrorHandler())
-              .build();
-  }
+    @Bean
+    public RestTemplate restTemplate(
+            RestTemplateBuilder restTemplateBuilder,
+            @Qualifier("client-http-request-factory") Supplier<ClientHttpRequestFactory> clientHttpRequestFactory) {
+        return restTemplateBuilder
+                .requestFactory(clientHttpRequestFactory)
+                .messageConverters(Arrays.asList(
+                        new FormHttpMessageConverter(),
+                        new OAuth2AccessTokenResponseHttpMessageConverter()))
+                .errorHandler(new OAuth2ErrorResponseErrorHandler())
+                .build();
+    }
 
-  @Bean("client-http-request-factory")
-  Supplier<ClientHttpRequestFactory> defaultClientHttpRequestFactory(
-          @Value("${lev.ssl.publicCertificate}") String publicCertificate,
-          @Value("${lev.ssl.privateKey}") String privateKey
-  ) {
-    if (publicCertificate == null || privateKey == null) {
-      logger.info("LEV Certificate or private key not set");
-      throw new IllegalArgumentException("SSL Certificate or private key cannot be null.");
-    } else {
-      logger.info("LEV defaultClientHttpRequestFactory with Certificate and private key");
-      return () -> {
-        try {
-          SSLContext sslContext = getSSLContext(publicCertificate, privateKey);
-          final SSLConnectionSocketFactory sslConnectionSocketFactory =
-                  new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
-          final Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
-                  .register("http", PlainConnectionSocketFactory.getSocketFactory())
-                  .register("https", sslConnectionSocketFactory)
-                  .build();
-          final PoolingHttpClientConnectionManager cm =
-                  new PoolingHttpClientConnectionManager(socketFactoryRegistry);
-          cm.setMaxTotal(maxTotalHttpClient);
-          cm.setDefaultMaxPerRoute(maxClientPerRoute);
-          final CloseableHttpClient httpClient = HttpClients.custom()
-                  .setConnectionManager(cm)
-                  .setDefaultRequestConfig(getRequestConfig())
-                  .build();
-          return new HttpComponentsClientHttpRequestFactory(httpClient);
-        } catch (IOException | NoSuchAlgorithmException | KeyStoreException | CertificateException |
-                 KeyManagementException | UnrecoverableKeyException e) {
-          logger.error("Failed to set up HTTP client with SSL context: {}", e.getMessage(), e);
-          throw new IllegalStateException("Failed to create HTTP client: " + e.getMessage(), e);
+    @Bean("client-http-request-factory")
+    Supplier<ClientHttpRequestFactory> defaultClientHttpRequestFactory(
+            @Value("${lev.ssl.publicCertificate}") String publicCertificate,
+            @Value("${lev.ssl.privateKey}") String privateKey
+    ) {
+        if (publicCertificate == null || privateKey == null) {
+            logger.info("LEV Certificate or private key not set");
+            throw new IllegalArgumentException("SSL Certificate or private key cannot be null.");
+        } else {
+            logger.info("LEV defaultClientHttpRequestFactory with Certificate and private key");
+            return () -> {
+                try {
+                    SSLContext sslContext = getSSLContext(publicCertificate, privateKey);
+                    final SSLConnectionSocketFactory sslConnectionSocketFactory =
+                            new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
+                    final Registry<ConnectionSocketFactory> socketFactoryRegistry =
+                            RegistryBuilder.<ConnectionSocketFactory>create()
+                            .register("http", PlainConnectionSocketFactory.getSocketFactory())
+                            .register("https", sslConnectionSocketFactory)
+                            .build();
+                    final PoolingHttpClientConnectionManager cm =
+                            new PoolingHttpClientConnectionManager(socketFactoryRegistry);
+                    cm.setMaxTotal(maxTotalHttpClient);
+                    cm.setDefaultMaxPerRoute(maxClientPerRoute);
+                    final CloseableHttpClient httpClient = HttpClients.custom()
+                            .setConnectionManager(cm)
+                            .setDefaultRequestConfig(getRequestConfig())
+                            .build();
+                    return new HttpComponentsClientHttpRequestFactory(httpClient);
+                } catch (IOException | NoSuchAlgorithmException | KeyStoreException | CertificateException
+                         | KeyManagementException | UnrecoverableKeyException e) {
+                    logger.error("Failed to set up HTTP client with SSL context: {}", e.getMessage(), e);
+                    throw new IllegalStateException("Failed to create HTTP client: " + e.getMessage(), e);
 
+                }
+            };
         }
-      };
-    }
-  }
-
-  @Bean
-  @ConditionalOnBean(value=RestTemplate.class)
-  public RequestInterceptor requestInterceptor( RestTemplate restTemplate,
-                                                @Value("${lev.bearertoken.username}") String username,
-                                                @Value("${lev.bearertoken.password}") String password
-  ) {
-    logger.info("requestInterceptor username: {}", username);
-    ClientRegistration clientRegistration = clientRegistrationRepository.findByRegistrationId("homeoffice");
-    return requestTemplate -> {
-      OAuthClientCredentialsFeignManager clientCredentialsFeignManager =
-              new OAuthClientCredentialsFeignManager(clientRegistration, restTemplate, username, password);
-      requestTemplate.header("Authorization", "Bearer " + clientCredentialsFeignManager.getAccessToken());
-    };
-  }
-
-  @Bean
-  @ConditionalOnProperty(name = "lev.ssl.publicCertificate")
-  public Client levClient(
-          @Value("${lev.ssl.publicCertificate}") String publicCertificate,
-          @Value("${lev.ssl.privateKey}") String privateKey
-  )
-          throws NoSuchAlgorithmException, KeyStoreException,
-          CertificateException, IOException, KeyManagementException, UnrecoverableKeyException {
-    if(publicCertificate == null || publicCertificate.isEmpty()){
-      logger.info("levClientNoOp()");
-      return new Client.Default(null, null);
-    } else {
-      logger.info("levClient()");
-      return new Client.Default(getClientSSLSocketFactory(publicCertificate, privateKey), null);
-    }
-  }
-
-  private SSLSocketFactory getClientSSLSocketFactory(String publicCertificate, String privateKey)
-          throws NoSuchAlgorithmException, KeyStoreException,
-          CertificateException, IOException, KeyManagementException, UnrecoverableKeyException
-  {
-    return getSSLContext(publicCertificate, privateKey).getSocketFactory();
-  }
-
-  public SSLContext getSSLContext(String publicCertificate, String privateKey)
-          throws NoSuchAlgorithmException, KeyStoreException,
-          CertificateException, IOException, KeyManagementException, UnrecoverableKeyException
-  {
-    SSLContext sslContext = SSLContext.getInstance("TLS");
-
-    KeyStore kStore = KeyStore.getInstance(KeyStore.getDefaultType());
-
-    CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
-
-    InputStream is = new ByteArrayInputStream(publicCertificate.getBytes());
-    X509Certificate certificate = (X509Certificate) certificateFactory.generateCertificate(is);
-
-
-    PEMParser pemParser = new PEMParser(new StringReader(privateKey));
-    Security.addProvider(new BouncyCastleProvider());
-    JcaPEMKeyConverter converter = new JcaPEMKeyConverter().setProvider("BC");
-    Object object = pemParser.readObject();
-    KeyPair kp = converter.getKeyPair((PEMKeyPair) object);
-    PrivateKey key = kp.getPrivate();
-
-    kStore.load(null);
-    kStore.setKeyEntry("alias", key, null, new java.security.cert.Certificate[]{certificate});
-
-    KeyManagerFactory kmf = KeyManagerFactory
-            .getInstance(KeyManagerFactory.getDefaultAlgorithm());
-    kmf.init(kStore, null);
-    KeyManager[] keyManagers = kmf.getKeyManagers();
-
-    if (keyManagers == null) {
-      keyManagers = new KeyManager[]{};
     }
 
-    sslContext.init(keyManagers, null, null);
-    return sslContext;
-  }
+    @Bean
+    @ConditionalOnBean(value = RestTemplate.class)
+    public RequestInterceptor requestInterceptor(RestTemplate restTemplate,
+                                                 @Value("${lev.bearertoken.username}") String username,
+                                                 @Value("${lev.bearertoken.password}") String password
+    ) {
+        logger.info("requestInterceptor username: {}", username);
+        ClientRegistration clientRegistration = clientRegistrationRepository.findByRegistrationId("homeoffice");
+        return requestTemplate -> {
+            OAuthClientCredentialsFeignManager clientCredentialsFeignManager =
+                    new OAuthClientCredentialsFeignManager(clientRegistration, restTemplate, username, password);
+            requestTemplate.header("Authorization", "Bearer " + clientCredentialsFeignManager.getAccessToken());
+        };
+    }
 
-  private RequestConfig getRequestConfig() {
-    int timeout = 10000;
-    return RequestConfig.custom()
-            .setResponseTimeout(timeout, TimeUnit.MILLISECONDS)
-            .setConnectionRequestTimeout(timeout, TimeUnit.MILLISECONDS)
-            .build();
-  }
+    @Bean
+    @ConditionalOnProperty(name = "lev.ssl.publicCertificate")
+    public Client levClient(
+            @Value("${lev.ssl.publicCertificate}") String publicCertificate,
+            @Value("${lev.ssl.privateKey}") String privateKey
+    )
+            throws NoSuchAlgorithmException, KeyStoreException,
+            CertificateException, IOException, KeyManagementException, UnrecoverableKeyException {
+        if (publicCertificate == null || publicCertificate.isEmpty()) {
+            logger.info("levClientNoOp()");
+            return new Client.Default(null, null);
+        } else {
+            logger.info("levClient()");
+            return new Client.Default(getClientSSLSocketFactory(publicCertificate, privateKey), null);
+        }
+    }
+
+    private SSLSocketFactory getClientSSLSocketFactory(String publicCertificate, String privateKey)
+            throws NoSuchAlgorithmException, KeyStoreException,
+            CertificateException, IOException, KeyManagementException, UnrecoverableKeyException {
+        return getSSLContext(publicCertificate, privateKey).getSocketFactory();
+    }
+
+    public SSLContext getSSLContext(String publicCertificate, String privateKey)
+            throws NoSuchAlgorithmException, KeyStoreException,
+            CertificateException, IOException, KeyManagementException, UnrecoverableKeyException {
+        KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+
+        CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+
+        InputStream is = new ByteArrayInputStream(publicCertificate.getBytes());
+        X509Certificate certificate = (X509Certificate) certificateFactory.generateCertificate(is);
+
+
+        PEMParser pemParser = new PEMParser(new StringReader(privateKey));
+        Security.addProvider(new BouncyCastleProvider());
+        JcaPEMKeyConverter converter = new JcaPEMKeyConverter().setProvider("BC");
+        Object object = pemParser.readObject();
+        KeyPair kp = converter.getKeyPair((PEMKeyPair) object);
+        PrivateKey key = kp.getPrivate();
+
+        keyStore.load(null);
+        keyStore.setKeyEntry("alias", key, null, new java.security.cert.Certificate[]{certificate});
+
+        KeyManagerFactory kmf = KeyManagerFactory
+                .getInstance(KeyManagerFactory.getDefaultAlgorithm());
+        kmf.init(keyStore, null);
+        KeyManager[] keyManagers = kmf.getKeyManagers();
+
+        if (keyManagers == null) {
+            keyManagers = new KeyManager[]{};
+        }
+
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(keyManagers, null, null);
+        return sslContext;
+    }
+
+    private RequestConfig getRequestConfig() {
+        int timeout = 10000;
+        return RequestConfig.custom()
+                .setResponseTimeout(timeout, TimeUnit.MILLISECONDS)
+                .setConnectionRequestTimeout(timeout, TimeUnit.MILLISECONDS)
+                .build();
+    }
 }
