@@ -162,7 +162,7 @@ publishing {
 }
 
 ext {
-    set('springCloudVersion', "2023.0.5")
+    set('springCloudVersion', "2023.0.6")
     set('jakarta-servlet.version', '5.0.0')
 }
 
