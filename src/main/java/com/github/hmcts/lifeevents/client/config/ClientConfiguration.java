@@ -45,12 +45,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorHandler;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
@@ -90,13 +92,14 @@ public class ClientConfiguration {
     }
 
     @Bean("client-http-request-factory")
-    Supplier<ClientHttpRequestFactory> defaultClientHttpRequestFactory(
+    @ConditionalOnProperty(name = "lev.ssl.publicCertificate")
+    Supplier<ClientHttpRequestFactory> sslClientHttpRequestFactory(
             @Value("${lev.ssl.publicCertificate}") String publicCertificate,
             @Value("${lev.ssl.privateKey}") String privateKey
     ) {
-        if (publicCertificate == null || privateKey == null) {
-            logger.info("LEV Certificate or private key not set");
-            throw new IllegalArgumentException("SSL Certificate or private key cannot be null.");
+        if (privateKey == null) {
+            logger.info("LEV private key not set");
+            throw new IllegalArgumentException("SSL private key cannot be null.");
         } else {
             logger.info("LEV defaultClientHttpRequestFactory with Certificate and private key");
             return () -> {
@@ -128,6 +131,12 @@ public class ClientConfiguration {
         }
     }
 
+    @Bean("client-http-request-factory")
+    @ConditionalOnMissingBean(name = "client-http-request-factory")
+    public Supplier<ClientHttpRequestFactory> plainClientHttpRequestFactory() {
+        return SimpleClientHttpRequestFactory::new;
+    }
+
     @Bean
     @ConditionalOnBean(value = RestTemplate.class)
     public RequestInterceptor requestInterceptor(RestTemplate restTemplate,
@@ -151,13 +160,15 @@ public class ClientConfiguration {
     )
             throws NoSuchAlgorithmException, KeyStoreException,
             CertificateException, IOException, KeyManagementException, UnrecoverableKeyException {
-        if (publicCertificate == null || publicCertificate.isEmpty()) {
-            logger.info("levClientNoOp()");
-            return new Client.Default(null, null);
-        } else {
-            logger.info("levClient()");
-            return new Client.Default(getClientSSLSocketFactory(publicCertificate, privateKey), null);
-        }
+        logger.info("levClient()");
+        return new Client.Default(getClientSSLSocketFactory(publicCertificate, privateKey), null);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(Client.class)
+    public Client levClientNoOp() {
+        logger.info("Creating no-op LEV client");
+        return new Client.Default(null, null);
     }
 
     private SSLSocketFactory getClientSSLSocketFactory(String publicCertificate, String privateKey)
