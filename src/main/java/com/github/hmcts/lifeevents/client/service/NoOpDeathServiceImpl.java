@@ -19,11 +19,11 @@ public class NoOpDeathServiceImpl implements DeathService  {
         logger.info("NoOpDeathServiceImpl");
     }
 
-    public List<V1Death> searchForDeathRecordsByNamesAndDate(String forenames, String surname, LocalDate date){
+    public List<V1Death> searchForDeathRecordsByNamesAndDate(String forenames, String surname, LocalDate date) {
         return null;
     }
 
-    public V1Death getDeathRecordById(Integer id){
+    public V1Death getDeathRecordById(Integer id) {
         return null;
     }
 }
