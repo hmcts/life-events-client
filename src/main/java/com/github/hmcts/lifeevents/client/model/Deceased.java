@@ -58,7 +58,7 @@ public class Deceased {
       return String.valueOf(value);
     }
 
-    @JsonCreator
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
     public static SexEnum fromValue(String value) {
       for (SexEnum b : SexEnum.values()) {
         if (b.value.equals(value)) {
