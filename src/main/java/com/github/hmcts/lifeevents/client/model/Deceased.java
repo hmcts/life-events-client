@@ -1,5 +1,6 @@
 package com.github.hmcts.lifeevents.client.model;
 
+import java.util.List;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -82,6 +83,8 @@ public class Deceased {
   private Boolean retired;
 
   private String maidenSurname;
+
+  private List<Alias> aliases;
 
   /**
    * Default constructor
@@ -318,8 +321,20 @@ public class Deceased {
     return maidenSurname;
   }
 
+  @Schema(name = "aliases", example = "Tester Aliase", description = "Aliases name of the deceased", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("aliases")
+  public List<Alias> getAliases() {
+    return aliases;
+  }
+
+
+
   public void setMaidenSurname(String maidenSurname) {
     this.maidenSurname = maidenSurname;
+  }
+
+  public void setAliases(List<Alias> aliases) {
+    this.aliases = aliases;
   }
 
   @Override
