@@ -2,6 +2,8 @@ package com.github.hmcts.lifeevents.client.model;
 
 import java.util.List;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -322,6 +324,7 @@ public class Deceased {
   }
 
   @Schema(name = "aliases", example = "Tester Aliase", description = "Aliases name of the deceased", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonInclude(JsonInclude.Include.NON_EMPTY)
   @JsonProperty("aliases")
   public List<Alias> getAliases() {
     return aliases;
