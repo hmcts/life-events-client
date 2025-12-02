@@ -23,7 +23,7 @@ java {
 
 checkstyle {
     maxWarnings = 0
-    toolVersion = '12.1.2'
+    toolVersion = '12.2.0'
     getConfigDirectory().set(new File(rootDir, 'config/checkstyle'))
 }
 
