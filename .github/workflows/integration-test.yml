@@ -27,6 +27,8 @@ jobs:
           LEV_ACCESS_TOKEN_URI: ${{ secrets.ACCESS_TOKEN_URI }}
           LEV_CLIENT_ID: ${{ secrets.LEV_CLIENT_ID }}
           LEV_CLIENT_SECRET: ${{ secrets.LEV_CLIENT_SECRET }}
+          CLIENT_ID: ${{ secrets.LEV_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.LEV_CLIENT_SECRET }}
           LEV_USERNAME: ${{ secrets.LEV_USERNAME }}
           LEV_PASSWORD: ${{ secrets.LEV_PASSWORD }}
           LEV_BEARERTOKEN_USERNAME: ${{ secrets.LEV_USERNAME }}
