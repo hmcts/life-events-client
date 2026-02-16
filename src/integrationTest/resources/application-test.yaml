@@ -1,0 +1,27 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  security:
+    oauth2:
+      client:
+        registration:
+          homeoffice:
+            client-id: ${LEV_CLIENT_ID}
+            client-secret: ${LEV_CLIENT_SECRET}
+            authorizationGrantType: password
+        provider:
+          homeoffice:
+            authorization-uri:  ${LEV_DEATH_URL:https://api.life-event-verification.np.homeoffice.gov.uk}
+            token-uri:  ${LEV_ACCESS_TOKEN_URI:https://api.life-event-verification.np.homeoffice.gov.uk/auth/token}
+
+http:
+  client:
+    max:
+      total: ${HTTP_CLIENT_MAX_TOTAL:100}
+      client_per_route: ${HTTP_CLIENT_MAX_CLIENT_PER_ROUTE:20}
+    seconds:
+      idle:
+        connection: ${HTTP_CLIENT_SECONDS_IDLE_CONNECTION:60}
+    validate:
+      after:
+        inactivity: ${HTTP_CLIENT_VALIDATE_AFTER_INACTIVITY:2000}
