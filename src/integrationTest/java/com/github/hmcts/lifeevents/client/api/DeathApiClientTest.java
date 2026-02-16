@@ -1,7 +1,5 @@
 package com.github.hmcts.lifeevents.client.api;
 
-import com.github.hmcts.lifeevents.client.config.ClientConfiguration;
-import com.github.hmcts.lifeevents.client.config.ServiceConfiguration;
 import com.github.hmcts.lifeevents.client.model.V1Death;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +12,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(classes = { ClientConfiguration.class, ServiceConfiguration.class })
+@SpringBootTest
 @ActiveProfiles("test")
 class DeathApiClientTest {
 
