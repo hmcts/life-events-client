@@ -12,7 +12,7 @@ public class TestOAuth2Config {
     @Bean
     public ClientRegistrationRepository clientRegistrationRepository() {
         // Dummy registration to satisfy Spring Security
-        ClientRegistration registration = ClientRegistration.withRegistrationId("test")
+        ClientRegistration registration = ClientRegistration.withRegistrationId("homeoffice")
                 .clientId("dummy-client")
                 .clientSecret("dummy-secret")
                 .authorizationGrantType(
