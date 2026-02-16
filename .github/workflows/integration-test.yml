@@ -24,6 +24,7 @@ jobs:
         run: ./gradlew check
       - name: Integration test
         env:
+          SPRING_PROFILES_ACTIVE: test
           LEV_ACCESS_TOKEN_URI: ${{ secrets.ACCESS_TOKEN_URI }}
           LEV_CLIENT_ID: ${{ secrets.LEV_CLIENT_ID }}
           LEV_CLIENT_SECRET: ${{ secrets.LEV_CLIENT_SECRET }}
