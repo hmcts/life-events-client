@@ -3,7 +3,7 @@ package com.github.hmcts.lifeevents.client.api;
 import com.github.hmcts.lifeevents.client.model.V1Death;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -12,7 +12,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@RestClientTest(DeathApiClient.class)
 @ActiveProfiles("test")
 class DeathApiClientTest {
 
