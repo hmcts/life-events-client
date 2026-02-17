@@ -16,11 +16,9 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(classes = {
-    ClientConfiguration.class,
-    ServiceConfiguration.class,
-    TestOAuth2Config.class
-})
+@SpringBootTest(
+    classes = { ClientConfiguration.class, ServiceConfiguration.class, TestOAuth2Config.class }
+)
 @EnableAutoConfiguration
 @EnableFeignClients(clients = DeathApiClient.class)
 @ActiveProfiles("test")
