@@ -35,4 +35,4 @@ jobs:
           LEV_PRIVATE_KEY: ${{ secrets.LEV_PRIVATE_KEY }}
           LEV_PUBLIC_CERTIFICATE: ${{ secrets.LEV_PUBLIC_CERTIFICATE }}
           LEV_DEATH_URL: ${{ secrets.LEV_DEATH_URL }}
-        run: ./gradlew integration -DLEV_DEATH_URL="https://api.life-event-verification.np.homeoffice.gov.uk" -DLEV_ACCESS_TOKEN_URI="https://api.life-event-verification.np.homeoffice.gov.uk/auth/token" -Dspring.profiles.active=test
+        run: ./gradlew integration -Dspring.profiles.active=test
