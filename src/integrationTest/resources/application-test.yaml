@@ -25,3 +25,14 @@ http:
     validate:
       after:
         inactivity: ${HTTP_CLIENT_VALIDATE_AFTER_INACTIVITY:2000}
+
+logging:
+  level:
+    feign: DEBUG
+    com.github.hmcts.lifeevents.client.api: DEBUG
+
+feign:
+  client:
+    config:
+      default:
+        loggerLevel: FULL
