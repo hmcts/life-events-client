@@ -28,7 +28,9 @@ http:
 
 logging:
   level:
+    root: INFO
     feign: DEBUG
+    org.springframework.cloud.openfeign: DEBUG
     com.github.hmcts.lifeevents.client.api: DEBUG
 
 feign:
