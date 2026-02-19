@@ -25,7 +25,7 @@ jobs:
       - name: Integration test
         env:
           SPRING_PROFILES_ACTIVE: test
-          LEV_ACCESS_TOKEN_URI: https://api.life-event-verification.np.homeoffice.gov.uk/auth/token
+          LEV_ACCESS_TOKEN_URI: ${{ secrets.ACCESS_TOKEN_URI }}
           LEV_CLIENT_ID: ${{ secrets.LEV_CLIENT_ID }}
           LEV_CLIENT_SECRET: ${{ secrets.LEV_CLIENT_SECRET }}
           LEV_USERNAME: ${{ secrets.LEV_USERNAME }}
@@ -34,5 +34,5 @@ jobs:
           LEV_BEARERTOKEN_PASSWORD: ${{ secrets.LEV_PASSWORD }}
           LEV_PRIVATE_KEY: ${{ secrets.LEV_PRIVATE_KEY }}
           LEV_PUBLIC_CERTIFICATE: ${{ secrets.LEV_PUBLIC_CERTIFICATE }}
-          LEV_DEATH_URL: https://api.life-event-verification.np.homeoffice.gov.uk
-        run: ./gradlew integration -Dspring.profiles.active=test
+          LEV_DEATH_URL: ${{ secrets.LEV_DEATH_URL }}
+        run: ./gradlew integration

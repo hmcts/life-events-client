@@ -11,8 +11,8 @@ spring:
             authorization-grant-type: password
         provider:
           homeoffice:
-            authorization-uri: https://api.life-event-verification.np.homeoffice.gov.uk
-            token-uri: https://api.life-event-verification.np.homeoffice.gov.uk/auth/token
+            authorization-uri: ${LEV_DEATH_URL:https://api.life-event-verification.np.homeoffice.gov.uk}
+            token-uri: ${LEV_ACCESS_TOKEN_URI:https://api.life-event-verification.np.homeoffice.gov.uk/auth/token}
 
 http:
   client:
@@ -25,16 +25,3 @@ http:
     validate:
       after:
         inactivity: ${HTTP_CLIENT_VALIDATE_AFTER_INACTIVITY:2000}
-
-logging:
-  level:
-    root: INFO
-    feign: DEBUG
-    org.springframework.cloud.openfeign: DEBUG
-    com.github.hmcts.lifeevents.client.api: DEBUG
-
-feign:
-  client:
-    config:
-      default:
-        loggerLevel: FULL
