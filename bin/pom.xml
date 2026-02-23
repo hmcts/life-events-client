@@ -15,7 +15,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.11</version>
+        <version>4.0.3</version>
     </parent>
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
@@ -38,7 +38,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>3.5.11</version>
+                <version>4.0.3</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
