@@ -11,7 +11,7 @@ spring:
             authorization-grant-type: password
         provider:
           homeoffice:
-            authorization-uri: ${LEV_DEATH_URL:https://api.life-event-verification.np.homeoffice.gov.uk}
+            authorization-uri: http://localhost:8089
             token-uri: ${LEV_ACCESS_TOKEN_URI:https://api.life-event-verification.np.homeoffice.gov.uk/auth/token}
 
 http:
