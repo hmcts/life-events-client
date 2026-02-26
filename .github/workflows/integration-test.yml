@@ -41,6 +41,9 @@ jobs:
       - name: Debug key length
         run: |
           echo "Key length: ${#LEV_PRIVATE_KEY}"
+      - name: Debug first line of cert
+        run: |
+          echo "$LEV_PUBLIC_CERTIFICATE" | head -n 1
 
       - name: Build
         run: ./gradlew check
