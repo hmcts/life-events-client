@@ -33,6 +33,15 @@ jobs:
         with:
           java-version: 21
           distribution: 'temurin'
+
+      - name: Debug cert length
+        run: |
+          echo "Cert length: ${#LEV_PUBLIC_CERTIFICATE}"
+
+      - name: Debug key length
+        run: |
+          echo "Key length: ${#LEV_PRIVATE_KEY}"
+
       - name: Build
         run: ./gradlew check
 
