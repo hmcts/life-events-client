@@ -1,3 +1,11 @@
+lev:
+  ssl:
+    publicCertificate: ${LEV_PUBLIC_CERTIFICATE:}
+    privateKey: ${LEV_PRIVATE_KEY:}
+  bearertoken:
+    username: ${LEV_USERNAME:}
+    password: ${LEV_PASSWORD:}
+
 spring:
   main:
     allow-bean-definition-overriding: true

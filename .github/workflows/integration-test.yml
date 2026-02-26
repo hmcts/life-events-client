@@ -13,6 +13,19 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SPRING_PROFILES_ACTIVE: test
+      LEV_ACCESS_TOKEN_URI: ${{ secrets.ACCESS_TOKEN_URI }}
+      LEV_CLIENT_ID: ${{ secrets.LEV_CLIENT_ID }}
+      LEV_CLIENT_SECRET: ${{ secrets.LEV_CLIENT_SECRET }}
+      LEV_USERNAME: ${{ secrets.LEV_USERNAME }}
+      LEV_PASSWORD: ${{ secrets.LEV_PASSWORD }}
+      LEV_BEARERTOKEN_USERNAME: ${{ secrets.LEV_USERNAME }}
+      LEV_BEARERTOKEN_PASSWORD: ${{ secrets.LEV_PASSWORD }}
+      LEV_PRIVATE_KEY: ${{ secrets.LEV_PRIVATE_KEY }}
+      LEV_PUBLIC_CERTIFICATE: ${{ secrets.LEV_PUBLIC_CERTIFICATE }}
+      LEV_DEATH_URL: ${{ secrets.LEV_DEATH_URL }}
+
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 21
@@ -22,17 +35,6 @@ jobs:
           distribution: 'temurin'
       - name: Build
         run: ./gradlew check
+
       - name: Integration test
-        env:
-          SPRING_PROFILES_ACTIVE: test
-          LEV_ACCESS_TOKEN_URI: ${{ secrets.ACCESS_TOKEN_URI }}
-          LEV_CLIENT_ID: ${{ secrets.LEV_CLIENT_ID }}
-          LEV_CLIENT_SECRET: ${{ secrets.LEV_CLIENT_SECRET }}
-          LEV_USERNAME: ${{ secrets.LEV_USERNAME }}
-          LEV_PASSWORD: ${{ secrets.LEV_PASSWORD }}
-          LEV_BEARERTOKEN_USERNAME: ${{ secrets.LEV_USERNAME }}
-          LEV_BEARERTOKEN_PASSWORD: ${{ secrets.LEV_PASSWORD }}
-          LEV_PRIVATE_KEY: ${{ secrets.LEV_PRIVATE_KEY }}
-          LEV_PUBLIC_CERTIFICATE: ${{ secrets.LEV_PUBLIC_CERTIFICATE }}
-          LEV_DEATH_URL: ${{ secrets.LEV_DEATH_URL }}
         run: ./gradlew integration
