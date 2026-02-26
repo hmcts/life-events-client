@@ -20,8 +20,6 @@ jobs:
       LEV_CLIENT_SECRET: ${{ secrets.LEV_CLIENT_SECRET }}
       LEV_USERNAME: ${{ secrets.LEV_USERNAME }}
       LEV_PASSWORD: ${{ secrets.LEV_PASSWORD }}
-      LEV_BEARERTOKEN_USERNAME: ${{ secrets.LEV_USERNAME }}
-      LEV_BEARERTOKEN_PASSWORD: ${{ secrets.LEV_PASSWORD }}
       LEV_PRIVATE_KEY: ${{ secrets.LEV_PRIVATE_KEY }}
       LEV_PUBLIC_CERTIFICATE: ${{ secrets.LEV_PUBLIC_CERTIFICATE }}
       LEV_DEATH_URL: ${{ secrets.LEV_DEATH_URL }}
