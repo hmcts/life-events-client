@@ -1,41 +1,17 @@
 package com.github.hmcts.lifeevents.client.config;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.security.KeyManagementException;
-import java.security.KeyPair;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.Security;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
-import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
-
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-
 import feign.Client;
 import feign.RequestInterceptor;
 import org.apache.hc.client5.http.config.RequestConfig;
-import org.apache.hc.core5.http.config.Registry;
-import org.apache.hc.core5.http.config.RegistryBuilder;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.client5.http.socket.ConnectionSocketFactory;
 import org.apache.hc.client5.http.socket.PlainConnectionSocketFactory;
 import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
 import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.HttpClients;
-import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.core5.http.config.Registry;
+import org.apache.hc.core5.http.config.RegistryBuilder;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
@@ -59,6 +35,30 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.core.http.converter.OAuth2AccessTokenResponseHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
+
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
+import java.security.KeyManagementException;
+import java.security.KeyPair;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.Security;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 
 @EnableConfigurationProperties
@@ -180,11 +180,26 @@ public class ClientConfiguration {
     public SSLContext getSSLContext(String publicCertificate, String privateKey)
             throws NoSuchAlgorithmException, KeyStoreException,
             CertificateException, IOException, KeyManagementException, UnrecoverableKeyException {
-        KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        // 1. Convert to string and trim any stray whitespace or invisible characters
+        String certContent = publicCertificate.trim();
 
+        // 2. Remove UTF-8 Byte Order Mark (BOM) if present (common in Windows-saved files)
+        certContent = certContent.replace("\uFEFF", "");
+
+        // 3. GitHub Masking Fix: Ensure we aren't trying to parse a masked placeholder
+        if (certContent.startsWith("***")) {
+            throw new RuntimeException("Environment variable appears to be masked. Check GitHub Secret injection.");
+        }
+
+        // 4. Force the stream to start EXACTLY at the BEGIN tag
+        int beginIndex = certContent.indexOf("-----BEGIN CERTIFICATE-----");
+        if (beginIndex != -1) {
+            certContent = certContent.substring(beginIndex);
+        }
+
+        // 5. Create the stream using UTF-8 explicitly
         CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
-
-        InputStream is = new ByteArrayInputStream(publicCertificate.getBytes());
+        InputStream is = new ByteArrayInputStream(certContent.getBytes(StandardCharsets.UTF_8));
         X509Certificate certificate = (X509Certificate) certificateFactory.generateCertificate(is);
 
 
@@ -194,7 +209,7 @@ public class ClientConfiguration {
         Object object = pemParser.readObject();
         KeyPair kp = converter.getKeyPair((PEMKeyPair) object);
         PrivateKey key = kp.getPrivate();
-
+        KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
         keyStore.load(null);
         keyStore.setKeyEntry("alias", key, null, new java.security.cert.Certificate[]{certificate});
 
